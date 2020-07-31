@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CosmoPlanetView">
+        <attr name="atmosphereColor" format="color"/>
+        <attr name="planetRadius" format="dimension" />
+        <attr name="atmosphereWidth" format="dimension"/>
+        <attr name="planetAmbianceRatio" format="float"/>
+        <attr name="showShadow" format="boolean"/>
+    </declare-styleable>
+</resources>

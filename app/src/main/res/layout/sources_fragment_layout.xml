@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.is0git.multicategorylayout.ui.category_layout.CategoryLayout
+        android:id="@+id/categoryLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.is0git.cosmoplanetview.ui.CosmoPlanetView
+            android:id="@+id/cosmoView"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="40dp"/>
+    </com.is0git.multicategorylayout.ui.category_layout.CategoryLayout>
+
+
+</layout>
