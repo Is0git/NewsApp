@@ -42,7 +42,7 @@ data class ArticlesItem(
 	companion object {
 		val comparator = object : DiffUtil.ItemCallback<ArticlesItem>() {
 			override fun areItemsTheSame(oldItem: ArticlesItem, newItem: ArticlesItem): Boolean {
-				return oldItem.tableId == newItem.tableId
+				return oldItem.title == newItem.title
 			}
 
 			override fun areContentsTheSame(oldItem: ArticlesItem, newItem: ArticlesItem): Boolean {

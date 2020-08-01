@@ -32,10 +32,13 @@ class CategoryManager<T>(
         }
     }
 
+
+    //not implemented yet
     suspend fun resetCategories() {
         categoryController.resetCategories(categories)
     }
 
+    //not implemented yet
     suspend fun updateCategories() {
         categoryController.updateCategories(categories)
     }

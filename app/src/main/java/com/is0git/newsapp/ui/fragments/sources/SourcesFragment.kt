@@ -72,7 +72,7 @@ class SourcesFragment :
 //                sportsCategory,
 //                technologyCategory
             )
-            addCategories(listOfCategories)
+
         }
     }
 

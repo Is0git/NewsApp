@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/headImage"
-                android:layout_width="120dp"
-                android:layout_height="80dp"
+                android:layout_width="150dp"
+                android:layout_height="110dp"
                 android:scaleType="centerCrop" />
         </com.google.android.material.card.MaterialCardView>
 

@@ -81,6 +81,7 @@ class TopHeadlinesRepository @Inject constructor(
                         )
                     }
                     if (networkResult != null) {
+                        (dataCache as HeadlineCache).deleteHeadlinesByCategory(c)
                         networkResult.articles?.forEach {
                             it.category = c
                         }

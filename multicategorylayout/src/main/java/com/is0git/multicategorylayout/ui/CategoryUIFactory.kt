@@ -45,6 +45,9 @@ object CategoryUIFactory {
             this.text = context.getString(textId)
             cornerRadius = ScreenUnitUtils.convertDpToPixel(25f, context).toInt()
             typeface = TypefaceCompat.create(context, Typeface.SANS_SERIF, Typeface.BOLD)
+            icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_next, null)
+            iconGravity = MaterialButton.ICON_GRAVITY_END
+            iconSize = ScreenUnitUtils.convertDpToPixel(15f, context).toInt()
         }
     }
 
@@ -62,6 +65,7 @@ object CategoryUIFactory {
             layoutManager = mLayoutManager
             this.adapter = adapter
             id = ViewCompat.generateViewId()
+            isNestedScrollingEnabled = false
         }
     }
 

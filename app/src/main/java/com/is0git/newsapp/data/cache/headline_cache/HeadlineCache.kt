@@ -18,4 +18,8 @@ class HeadlineCache @Inject constructor(private val headlineDao: HeadlineDao) : 
     fun getHeadlinesByCategory(limit: Int, category: String): LiveData<List<ArticlesItem>> {
         return headlineDao.getHeadlineArticles(limit, category)
     }
+
+    suspend fun deleteHeadlinesByCategory(category: String) {
+        headlineDao.deleteArticlesByCategory(category)
+    }
 }

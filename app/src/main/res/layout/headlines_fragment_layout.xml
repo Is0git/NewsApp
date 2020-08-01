@@ -2,39 +2,58 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.is0git.multicategorylayout.ui.category_layout.CategoryLayout
-            android:id="@+id/categoryLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="@style/TextAppearance.MaterialComponents.Headline4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:elevation="1dp"
-                android:fontFamily="@font/novabold"
-                android:text="DISCOVER"
-                android:textColor="@color/colorBackground"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/cosmoView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/cosmoView"
-                app:layout_constraintVertical_bias="0.7" />
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <com.is0git.multicategorylayout.ui.category_layout.CategoryLayout
+                android:id="@+id/categoryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackground">
+
+            <!--            <com.google.android.material.textview.MaterialTextView-->
+            <!--                style="@style/TextAppearance.MaterialComponents.Headline4"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:elevation="1dp"-->
+            <!--                android:fontFamily="@font/novabold"-->
+            <!--                android:text="DISCOVER"-->
+            <!--                android:textColor="@color/colorPrimary"-->
+            <!--                android:textStyle="bold"-->
+            <!--                android:layout_gravity="center"/>-->
 
             <com.is0git.cosmoplanetview.ui.CosmoPlanetView
                 android:id="@+id/cosmoView"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="40dp"
+                app:atmosphereWidth="7dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:atmosphereWidth="7dp"
-                app:planetRadius="100dp"
-                android:layout_marginBottom="40dp"/>
-        </com.is0git.multicategorylayout.ui.category_layout.CategoryLayout>
-    </ScrollView>
+                app:layout_scrollFlags="scroll|snap"
+                app:planetRadius="100dp" />
+
+            <com.google.android.material.tabs.TabLayout
+                style="@style/CategoryLayout.TabLayout"
+                android:id="@+id/categoryTabLayout"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways|snap" />
+        </com.google.android.material.appbar.AppBarLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

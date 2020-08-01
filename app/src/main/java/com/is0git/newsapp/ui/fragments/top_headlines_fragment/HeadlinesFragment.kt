@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import com.is0git.multicategorylayout.adapters.CategoryListAdapter
@@ -20,7 +19,6 @@ import com.is0git.newsapp.network.models.common.ArticlesItem
 import com.is0git.newsapp.network.models.sources.SourcesItem
 import com.is0git.newsapp.ui.fragments.BaseFragment
 import com.is0git.newsapp.utils.loadImageWith
-import com.is0git.newsapp.vm.sources.SourcesViewModel
 import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,7 +49,7 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
                 .enabledViewAll()
                 .setId(CATEGORY_BUSINESS)
                 .setTitle(CATEGORY_BUSINESS)
-                .addAdapter(businessAdapter)
+                .setAdapter(businessAdapter)
                 .addFlags(FLAG_HORIZONTAL)
                 .addDivider(R.color.dividerColor)
                 .build()
@@ -59,7 +57,7 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
                 .enabledViewAll()
                 .setId(CATEGORY_ENTERTAINMENT)
                 .setTitle(CATEGORY_ENTERTAINMENT)
-                .addAdapter(createHorizontalPositionAdapter())
+                .setAdapter(createHorizontalPositionAdapter())
                 .addFlags(Category.FLAG_GRID or FLAG_HORIZONTAL)
                 .build()
             val generalCategory = Category.Builder<ArticlesItem>()
@@ -68,12 +66,12 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
                 .setTitle(CATEGORY_GENERAL)
                 .addFlags(FLAG_HORIZONTAL)
                 .addDivider(R.color.dividerColor)
-                .addAdapter(createVerticalPositionAdapter())
+                .setAdapter(createVerticalPositionAdapter())
                 .build()
             val healthCategory = Category.Builder<ArticlesItem>()
                 .enabledViewAll()
                 .setId(CATEGORY_HEALTH)
-                .addAdapter(createHorizontalPositionAdapter())
+                .setAdapter(createHorizontalPositionAdapter())
                 .setTitle(CATEGORY_HEALTH)
                 .addDivider(R.color.dividerColor)
                 .addFlags(Category.FLAG_GRID or FLAG_HORIZONTAL)
@@ -84,14 +82,14 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
                 .setTitle(CATEGORY_SCIENCE)
                 .addFlags(FLAG_HORIZONTAL)
                 .addDivider(R.color.dividerColor)
-                .addAdapter(createVerticalPositionAdapter())
+                .setAdapter(createVerticalPositionAdapter())
                 .build()
             val sportsCategory = Category.Builder<ArticlesItem>()
                 .enabledViewAll()
                 .setId(CATEGORY_SPORTS)
                 .setTitle(CATEGORY_SPORTS)
                 .addFlags(Category.FLAG_GRID or FLAG_HORIZONTAL)
-                .addAdapter(createHorizontalPositionAdapter())
+                .setAdapter(createHorizontalPositionAdapter())
                 .build()
             val technologyCategory = Category.Builder<ArticlesItem>()
                 .enabledViewAll()
@@ -99,7 +97,7 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
                 .setTitle(CATEGORY_TECHNOLOGY)
                 .addFlags(FLAG_HORIZONTAL)
                 .addDivider(R.color.dividerColor)
-                .addAdapter(createVerticalPositionAdapter())
+                .setAdapter(createVerticalPositionAdapter())
                 .build()
             val listOfCategories = mutableListOf(
                 businessCategory,
@@ -110,7 +108,8 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
                 sportsCategory,
                 technologyCategory
             )
-            addCategories(listOfCategories)
+            addCategories(listOfCategories, viewLifecycleOwner)
+            setupWithTabLayout(binding.categoryTabLayout, createVerticalPositionAdapter())
         }
     }
 

@@ -19,7 +19,7 @@ open class Category<T>(
     var isExpendable: Boolean,
     var flags: Int,
     @IdRes var categoryViewId: Int,
-    var adapter: ListAdapter<*, out RecyclerView.ViewHolder>,
+    var adapter: ListAdapter<out Any, out RecyclerView.ViewHolder>,
     @AttrRes var textAppearanceRes: Int?,
     @StyleRes var buttonStyleRes: Int?,
     var hasDivider: Boolean,
@@ -35,7 +35,7 @@ open class Category<T>(
         private var title: String? = null
         private var isViewAllEnabled: Boolean = false
         private var id: String? = null
-        private var adapter: ListAdapter<T, out RecyclerView.ViewHolder>? = null
+        private var adapter: ListAdapter<out Any, out RecyclerView.ViewHolder>? = null
         private var flags: Int = FLAG_NONE
         private var isExpendable = true
         private var categoryData: MutableList<T> = mutableListOf()
@@ -57,7 +57,7 @@ open class Category<T>(
             return this
         }
 
-        fun <VH : RecyclerView.ViewHolder> addAdapter(adapter: ListAdapter<T, VH>): Builder<T> {
+        fun <VH : RecyclerView.ViewHolder> setAdapter(adapter: ListAdapter<out Any, out VH>): Builder<T> {
             this.adapter = adapter
             return this
         }
@@ -101,8 +101,8 @@ open class Category<T>(
             if (adapter == null) throw KotlinNullPointerException("adapter can't be null")
             if (id == null) id = title
             return Category(
-                title!!,
                 id!!,
+                title!!,
                 isExpendable,
                 flags,
                 ViewCompat.generateViewId(),
