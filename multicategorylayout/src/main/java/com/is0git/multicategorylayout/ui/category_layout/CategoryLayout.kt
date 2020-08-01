@@ -2,7 +2,12 @@ package com.is0git.multicategorylayout.ui.category_layout
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.SparseArray
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,11 +35,12 @@ class CategoryLayout : ConstraintLayout,
     TabManagerListener{
 
     private lateinit var categoryManager: CategoryManager<*>
-    lateinit var uiCreator: UIManager<Category<*>>
+    lateinit var uiManager: UIManager<Category<*>>
     lateinit var tabLayoutManager: TabLayoutManager
     private var isInitialized = false
     lateinit var categoryJob: Job
     private lateinit var lifecycleOwner: LifecycleOwner
+    lateinit var tabSelectedListener: () -> Unit
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -54,11 +60,11 @@ class CategoryLayout : ConstraintLayout,
         val categoryController = DefaultCategoryController<T>()
         val categoryListener: CategoryListener<T> = object : CategoryListener<T> {
             override fun onCategoryChange(category: Category<T>) {
-
+                updateTabs()
             }
 
             override fun onCategoryRemove(categoryId: String) {
-
+                updateTabs()
             }
 
             override fun onCategoryAdded(category: Category<T>) {
@@ -66,7 +72,7 @@ class CategoryLayout : ConstraintLayout,
             }
 
         }
-        uiCreator = CategoryUIManager<T>(this)
+        uiManager = CategoryUIManager<T>(this)
         categoryManager = CategoryManager(categoryModifier, categoryController, categoryListener)
         isInitialized = true
     }
@@ -84,7 +90,7 @@ class CategoryLayout : ConstraintLayout,
     }
 
     fun getCategoryGroupSize(): Int {
-        return uiCreator.categoryGroupSize
+        return uiManager.categoryGroupSize
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -94,27 +100,40 @@ class CategoryLayout : ConstraintLayout,
     }
 
     private fun createCategoryGroup(category: Category<*>) {
-        uiCreator.createUI(category)
+        uiManager.createUI(category)
     }
 
     /**
      * if [listAdapter] is null, 'all item' tab won't included]
      */
-    fun setupWithTabLayout(tabLayout: TabLayout, listAdapter: ListAdapter<out Any, out RecyclerView.ViewHolder>?) {
+    fun setupWithTabLayout(tabLayout: TabLayout, listAdapter: ListAdapter<out Any, out RecyclerView.ViewHolder>?, scrollView: NestedScrollView) {
         lifecycleOwner.lifecycleScope.launch {
             if (!::tabLayoutManager.isInitialized) {
                 tabLayoutManager = CategoryTabLayoutManager(tabLayout, CategoryTabFactory())
                 tabLayoutManager.setOnTabUpdateListener { tab, category ->
                     true
                 }
+                categoryJob.join()
+                tabLayoutManager.setupWithCategoryView(
+                    tabLayout,
+                    categoryManager.categories,
+                    listAdapter
+                )
+                tabLayoutManager.setOnTabSelectedListener { tab, key ->
+                  val view =  uiManager.categoryViews.find { (it.view as TextView).text == key }?.view
+                  if (view != null) {
+                      tabSelectedListener()
+                      scrollView.smoothScrollTo(0,  view.y.toInt(), resources.getInteger(R.integer.category_layout_scroll_anim))
+                  }
+                }
+            } else {
+                throw InstantiationException("tab layout is already integrated into category layout")
             }
-            categoryJob.join()
-            tabLayoutManager.setupWithCategoryView(
-                tabLayout,
-                categoryManager.categories,
-                listAdapter
-            )
         }
+    }
+
+    fun onTabSelectedListener(listener: () -> Unit) {
+        tabSelectedListener = listener
     }
 
     private  fun updateTabs() {

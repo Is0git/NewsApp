@@ -12,6 +12,7 @@ abstract class UIManager<T>(protected val viewGroup: ViewGroup) {
 
     var viewCreatorLoader: ViewCreatorLoader = DefaultViewCreatorLoader()
     var categoryGroupSize: Int = 0
+    var categoryViews = mutableListOf<CategoryView>()
 
     fun createUI(dataItem: T) {
         defineViewCreators(viewCreatorLoader, dataItem)
@@ -22,10 +23,19 @@ abstract class UIManager<T>(protected val viewGroup: ViewGroup) {
         }
         if (views.count() == 0) return
         positionViews(views)
+        var realViewsCount = 0
         viewGroup.apply {
             for (v in views) {
-                if (v != null) addView(v)
+                if (v != null) {
+                    addView(v)
+                    realViewsCount++
+                }
             }
+        }
+        val firstNotNull = views.find { it != null }
+        if (firstNotNull != null) {
+            val categoryView = CategoryView(firstNotNull, realViewsCount)
+            categoryViews.add(categoryView)
         }
     }
 
@@ -39,3 +49,5 @@ abstract class UIManager<T>(protected val viewGroup: ViewGroup) {
     abstract fun positionViews(views: List<View?>)
     abstract fun defineViewCreators(creatorLoader: ViewCreatorLoader, item: T)
 }
+
+class CategoryView(val view: View, var count: Int)

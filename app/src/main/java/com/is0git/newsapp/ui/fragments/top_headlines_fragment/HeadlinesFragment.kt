@@ -7,8 +7,8 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import com.is0git.multicategorylayout.adapters.CategoryListAdapter
-import com.is0git.multicategorylayout.adapters.view_holders.HorizontalListViewHolder
-import com.is0git.multicategorylayout.adapters.view_holders.VerticalListViewHolder
+import com.is0git.multicategorylayout.ui.category_layout.view_holders.HorizontalListViewHolder
+import com.is0git.multicategorylayout.ui.category_layout.view_holders.VerticalListViewHolder
 import com.is0git.multicategorylayout.category_data.Category
 import com.is0git.multicategorylayout.category_data.Category.Companion.FLAG_HORIZONTAL
 import com.is0git.multicategorylayout.databinding.ListItemOneBinding
@@ -109,7 +109,10 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
                 technologyCategory
             )
             addCategories(listOfCategories, viewLifecycleOwner)
-            setupWithTabLayout(binding.categoryTabLayout, createVerticalPositionAdapter())
+            setupWithTabLayout(binding.categoryTabLayout, createVerticalPositionAdapter(), binding.categoryScrollView)
+            onTabSelectedListener {
+                binding.appBar.setExpanded(false)
+            }
         }
     }
 

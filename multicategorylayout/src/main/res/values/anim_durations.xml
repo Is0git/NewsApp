@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="category_layout_scroll_anim">1000</integer>
+</resources>

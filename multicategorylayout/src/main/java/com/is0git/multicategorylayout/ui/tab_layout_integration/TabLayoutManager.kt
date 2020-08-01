@@ -15,10 +15,11 @@ abstract class TabLayoutManager(
     var tabLayout: TabLayout,
     protected val tabFactory: TabFactory<Category<*>>,
     protected var tabManagerListener: TabManagerListener? = null
-) {
+) : TabLayout.OnTabSelectedListener  {
 
     var isAllEnabled = false
     private var tabUpdateListener: ((TabLayout.Tab, Category<*>) -> Boolean)? = null
+    private var onTabSelectedListener: ((TabLayout.Tab, key: String) -> Unit)? = null
     lateinit var updateTabLayoutJob: Job
 
     open suspend fun setupWithCategoryView(
@@ -33,6 +34,7 @@ abstract class TabLayoutManager(
                 val tab = tabFactory.createTab(tabLayout, c, null)
                 addTab(tab, c)
             }
+            tabLayout.addOnTabSelectedListener(this@TabLayoutManager)
         }
     }
 
@@ -70,7 +72,21 @@ abstract class TabLayoutManager(
         }
     }
 
+    fun setOnTabSelectedListener(listener: (TabLayout.Tab, key: String) -> Unit) {
+        onTabSelectedListener = listener
+    }
+
+    override fun onTabSelected(tab: TabLayout.Tab?) {
+        if(tab != null) {
+            onTabSelectedListener?.invoke(tab, tab.text.toString())
+        }
+
+    }
+
     fun clear() {
         updateTabLayoutJob.cancel()
     }
+
+    override fun onTabReselected(tab: TabLayout.Tab?) {}
+    override fun onTabUnselected(tab: TabLayout.Tab?) {}
 }
