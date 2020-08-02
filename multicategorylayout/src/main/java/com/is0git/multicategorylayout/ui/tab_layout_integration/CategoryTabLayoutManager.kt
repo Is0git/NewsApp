@@ -10,6 +10,10 @@ import com.is0git.multicategorylayout.ui.tab_layout_integration.tab_factory.Cate
 class CategoryTabLayoutManager(tabLayout: TabLayout, categoryTabFactory: CategoryTabFactory) :
     TabLayoutManager(tabLayout, categoryTabFactory) {
 
+    init {
+        tabLayout.removeAllTabs()
+    }
+
     override suspend fun setupWithCategoryView(
         tabLayout: TabLayout,
         category: Map<String, Category<*>>,

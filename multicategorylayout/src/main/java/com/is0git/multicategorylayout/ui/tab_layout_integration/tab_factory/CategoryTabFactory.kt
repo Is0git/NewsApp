@@ -5,7 +5,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.tabs.TabLayout
 import com.is0git.multicategorylayout.category_data.Category
 
-class CategoryTabFactory : TabFactory<Category<*>> {
+class CategoryTabFactory : TabFactory {
     override fun createTab(
         tabLayout: TabLayout,
         category: Category<*>,

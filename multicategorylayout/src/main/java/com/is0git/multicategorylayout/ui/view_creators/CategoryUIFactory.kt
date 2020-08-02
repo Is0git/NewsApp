@@ -1,15 +1,12 @@
-package com.is0git.multicategorylayout.ui
+package com.is0git.multicategorylayout.ui.view_creators
 
 import android.content.Context
 import android.graphics.Typeface
-import android.view.ContextThemeWrapper
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.TypefaceCompat
 import androidx.core.view.ViewCompat
@@ -19,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.textview.MaterialTextView
 import com.is0git.commonlibs.ScreenUnitUtils
 import com.is0git.multicategorylayout.R

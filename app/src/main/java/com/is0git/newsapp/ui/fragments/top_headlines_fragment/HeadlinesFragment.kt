@@ -5,22 +5,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
+import com.google.android.material.tabs.TabLayout
 import com.is0git.multicategorylayout.adapters.CategoryListAdapter
-import com.is0git.multicategorylayout.ui.category_layout.view_holders.HorizontalListViewHolder
-import com.is0git.multicategorylayout.ui.category_layout.view_holders.VerticalListViewHolder
 import com.is0git.multicategorylayout.category_data.Category
 import com.is0git.multicategorylayout.category_data.Category.Companion.FLAG_HORIZONTAL
 import com.is0git.multicategorylayout.databinding.ListItemOneBinding
 import com.is0git.multicategorylayout.databinding.ListItemTwoBinding
+import com.is0git.multicategorylayout.listeners.OnCategoryListener
+import com.is0git.multicategorylayout.ui.category_layout.view_holders.HorizontalListViewHolder
+import com.is0git.multicategorylayout.ui.category_layout.view_holders.VerticalListViewHolder
+import com.is0git.multicategorylayout.ui.tab_layout_integration.OnCategoryTabListener
 import com.is0git.newsapp.R
 import com.is0git.newsapp.databinding.HeadlinesFragmentLayoutBinding
 import com.is0git.newsapp.network.models.common.ArticlesItem
-import com.is0git.newsapp.network.models.sources.SourcesItem
 import com.is0git.newsapp.ui.fragments.BaseFragment
 import com.is0git.newsapp.utils.loadImageWith
 import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.headlines_fragment_layout) {
@@ -32,7 +37,7 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
             it.observe(viewLifecycleOwner) {
                 Log.d("TEST", "${it.count()}")
                 if (it.count() > 0)
-                binding.categoryLayout.updateAdapter<SourcesItem>(it.first().category, it)
+                binding.categoryLayout.updateAdapter<ArticlesItem>(it.first().category!!, it)
             }
         }
     }
@@ -104,16 +109,59 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
                 entertainmentCategory,
                 generalCategory,
                 healthCategory,
-                scienceCategory,
                 sportsCategory,
                 technologyCategory
             )
             addCategories(listOfCategories, viewLifecycleOwner)
-            setupWithTabLayout(binding.categoryTabLayout, createVerticalPositionAdapter(), binding.categoryScrollView)
+            setOnCategoryTabListener(object : OnCategoryTabListener {
+                override fun onTabAdded(
+                    tab: TabLayout.Tab,
+                    category: Category<*>,
+                    position: Int
+                ) {
+                    Log.d("TESTY", "Added: $position")
+                }
+
+                override fun onTabRemoved(category: Category<*>, position: Int) {
+                    Log.d("TESTY", "Removed: $position")
+                }
+
+                override fun onTabUpdated(
+                    tab: TabLayout.Tab,
+                    category: Category<*>,
+                    position: Int
+                ) {
+                    Log.d("TESTY", "UPDATED: $position")
+                }
+
+
+            })
+            setOnCategoryListener(
+                object : OnCategoryListener {
+                    override fun onCategoryChanged(category: Category<*>, position: Int) {
+                        Log.d("TESTY", "Added2: $position")
+                    }
+
+                    override fun onCategoryRemoved(category: Category<*>, position: Int) {
+                        Log.d("TESTY", "Removed2: $position")
+                    }
+
+                    override fun onCategoryAdded(category: Category<*>, position: Int) {
+                        Log.d("TESTY", "UPDATED2: $position")
+                    }
+
+                }
+            )
+            setupWithTabLayout(binding.categoryTabLayout, createVerticalPositionAdapter())
             onTabSelectedListener {
                 binding.appBar.setExpanded(false)
             }
+            lifecycleScope.launch {
+                delay(1000)
+                removeCategoryAt(2)
+            }
         }
+
     }
 
     private fun createVerticalPositionAdapter() : CategoryListAdapter<ArticlesItem, VerticalListViewHolder> {

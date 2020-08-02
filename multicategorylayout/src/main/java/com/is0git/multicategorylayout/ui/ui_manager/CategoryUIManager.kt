@@ -1,4 +1,4 @@
-package com.is0git.multicategorylayout.ui
+package com.is0git.multicategorylayout.ui.ui_manager
 
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +8,9 @@ import com.is0git.commonlibs.ScreenUnitUtils
 import com.is0git.multicategorylayout.category_data.Category
 import com.is0git.multicategorylayout.ui.view_creators.*
 import com.is0git.multicategorylayout.ui.view_creators.view_creator_loader.ViewCreatorLoader
+import java.security.AccessController.getContext
 
-internal class CategoryUIManager<T>(viewGroup: ViewGroup) : UIManager<Category<*>>(viewGroup) {
+internal class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
 
     override fun defineViewCreators(creatorLoader: ViewCreatorLoader, item: Category<*>) {
         val headlineCreator = HeadLineCreator(getContext(), item)
@@ -25,7 +26,7 @@ internal class CategoryUIManager<T>(viewGroup: ViewGroup) : UIManager<Category<*
         )
     }
 
-    override fun createViews(dataItem: Category<*>): List<View?> {
+    override fun createViews(dataItem: Category<*>): MutableList<View?> {
         val views = mutableListOf<View?>()
         for (v in getViewCreators()) {
             val view = v?.createView()

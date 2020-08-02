@@ -1,26 +1,27 @@
 package com.is0git.multicategorylayout.ui.tab_layout_integration
 
-import android.view.View
 import androidx.core.view.children
-import androidx.core.view.get
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.is0git.multicategorylayout.category_data.Category
 import com.is0git.multicategorylayout.ui.tab_layout_integration.tab_factory.TabFactory
 import kotlinx.coroutines.*
-import java.lang.IllegalStateException
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.set
 
 abstract class TabLayoutManager(
     var tabLayout: TabLayout,
-    protected val tabFactory: TabFactory<Category<*>>,
-    protected var tabManagerListener: TabManagerListener? = null
-) : TabLayout.OnTabSelectedListener  {
+    protected val tabFactory: TabFactory,
+    var tabManagerListener: TabManagerListener? = null
+) : TabLayout.OnTabSelectedListener,
+    TabController {
 
     var isAllEnabled = false
     private var tabUpdateListener: ((TabLayout.Tab, Category<*>) -> Boolean)? = null
     private var onTabSelectedListener: ((TabLayout.Tab, key: String) -> Unit)? = null
-    lateinit var updateTabLayoutJob: Job
+    private var updateTabLayoutJob: Job? = null
 
     open suspend fun setupWithCategoryView(
         tabLayout: TabLayout,
@@ -30,17 +31,23 @@ abstract class TabLayoutManager(
         if (this.tabLayout != tabLayout) throw IllegalStateException("you have to pass initial TabLayout")
         this.isAllEnabled = listAdapter != null
         withContext(Dispatchers.Main) {
-            for ((_, c) in category) {
-                val tab = tabFactory.createTab(tabLayout, c, null)
-                addTab(tab, c)
-            }
+//            for ((_, c) in category) {
+//                val tab = tabFactory.createTab(tabLayout, c, null)
+//                addTab(tab, c)
+//            }
             tabLayout.addOnTabSelectedListener(this@TabLayoutManager)
         }
     }
 
     fun addTab(tab: TabLayout.Tab, category: Category<*>, position: Int? = null) {
-        if (position != null) tabLayout.addTab(tab, position) else tabLayout.addTab(tab)
-        tabManagerListener?.onTabAdded(tab, category)
+        tab.view.id = category.categoryViewId
+        if (position != null) {
+            tabLayout.addTab(tab, position)
+            tabManagerListener?.tabAdded(tab, category, position)
+        } else {
+            tabLayout.addTab(tab)
+            tabManagerListener?.tabAdded(tab, category, tabLayout.tabCount - 1)
+        }
     }
 
     fun setOnTabUpdateListener(action: (tab: TabLayout.Tab, category: Category<*>) -> Boolean) {
@@ -72,19 +79,33 @@ abstract class TabLayoutManager(
         }
     }
 
+    override fun addTab(category: Category<*>, position: Int) {
+        val tab = tabFactory.createTab(tabLayout, category, null)
+        addTab(tab, category, position)
+    }
+
+    override fun removeTab(category: Category<*>, position: Int) {
+        tabLayout.removeTabAt(position)
+        tabManagerListener?.tabRemoved(category, position)
+    }
+
+    override fun updateTab(category: Category<*>, position: Int) {
+        TODO("yet to implement")
+    }
+
     fun setOnTabSelectedListener(listener: (TabLayout.Tab, key: String) -> Unit) {
         onTabSelectedListener = listener
     }
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
-        if(tab != null) {
+        if (tab != null) {
             onTabSelectedListener?.invoke(tab, tab.text.toString())
         }
 
     }
 
     fun clear() {
-        updateTabLayoutJob.cancel()
+        updateTabLayoutJob?.cancel()
     }
 
     override fun onTabReselected(tab: TabLayout.Tab?) {}
