@@ -23,10 +23,7 @@ import com.is0git.multicategorylayout.ui.tab_layout_integration.tab_factory.Cate
 import com.is0git.multicategorylayout.ui.ui_manager.CategoryUIManager
 import com.is0git.multicategorylayout.ui.ui_manager.CategoryView
 import com.is0git.multicategorylayout.ui.ui_manager.UIManagerListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CategoryManager(
     var viewGroup: ViewGroup,
@@ -36,7 +33,7 @@ class CategoryManager(
     AdapterController,
     UIManagerListener,
     TabManagerListener{
-    val categories: MutableMap<String, Category<*>> = mutableMapOf()
+    val categories: MutableList<Category<*>> = mutableListOf()
     var uiManager = CategoryUIManager(viewGroup)
     var onCategoryListener: OnCategoryListener? = null
     var tabLayoutManager: TabLayoutManager? = null
@@ -51,52 +48,56 @@ class CategoryManager(
     fun addCategories(categories: List<Category<*>>) {
         lifecycleOwner?.lifecycleScope?.launch {
             categories.forEachIndexed { pos, category ->
-                addCategory(category, pos)
+                this@CategoryManager.categories.add(category)
+                categoryAdded(category, pos)
             }
         }
     }
 
-    suspend fun addCategory(category: Category<*>, position: Int) {
-        coroutineScope {
-            launch(Dispatchers.Default) { categoryModifier.modifyCategory(category) }
-            categories.put(category.id, category)
-        }
-        withContext(Dispatchers.Main) {
+    fun addCategory(category: Category<*>, position: Int) {
+        categoryModifier.modifyCategory(category)
+        if (position >= 0 && position < categories.size) {
+            categories.add(position, category)
             categoryAdded(category, position)
             onCategoryListener?.onCategoryAdded(category, position)
         }
     }
 
     fun removeCategory(position: Int) {
-        val category = categories.values.elementAt(position)
-        categories.remove(category.id)
+        val category = categories[position]
+        categories.remove(category)
         categoryRemoved(category, position)
         onCategoryListener?.onCategoryRemoved(category, position)
     }
 
+    fun removeAll() {
+        for (i in categories.indices) {
+            removeCategory(0)
+        }
+    }
+
     fun updateCategory(position: Int) {
-        val category = categories.values.elementAt(position)
-        if (categories.containsKey(category.id)) throw IllegalStateException("category not found")
+        val category = categories[position]
+        if (categories.contains(category)) throw IllegalStateException("category not found")
         categoryChanged(category, position)
         onCategoryListener?.onCategoryChanged(category, position)
     }
 
     //not implemented yet
-    suspend fun resetCategories() {
+    fun resetCategories() {
         categoryController.resetCategories(categories)
     }
 
     //not implemented yet
-    suspend fun updateCategories() {
+    fun updateCategories() {
         categoryController.updateCategories(categories)
     }
 
     @Suppress("unchecked_cast")
     override fun updateCategoryAdapter(categoryId: String, list: List<*>) {
-        val containsCategory = categories.containsKey(categoryId)
-        if (!containsCategory) return
+        val category = categories.find { it.id == categoryId }
+        if (category == null) return
         else {
-            val category = categories[categoryId]!!
             category.adapter.submitList(list as List<Nothing>)
         }
     }
@@ -158,7 +159,6 @@ class CategoryManager(
     ) {
         if (viewGroup.parent !is NestedScrollView) throw IllegalStateException("category layout has to be wrapped in NestedScrollView to setup it with tabLayout")
         val scrollView = viewGroup.parent as NestedScrollView
-        lifecycleOwner?.lifecycleScope?.launch {
             if (tabLayoutManager == null) {
                 tabLayoutManager = CategoryTabLayoutManager(tabLayout, CategoryTabFactory())
                 tabLayoutManager!!.setOnTabUpdateListener { tab, category ->
@@ -185,7 +185,6 @@ class CategoryManager(
             } else {
                 throw InstantiationException("tab layout is already integrated into category layout")
             }
-        }
     }
 
     fun clear() {
@@ -195,8 +194,8 @@ class CategoryManager(
     private fun getContext() = uiManager.getContext()
 }
 
-infix fun MutableMap<String, out Category<*>>.getCategoryPosition(category: Category<*>): Int? {
-    this.values.forEachIndexed { index, c ->
+infix fun List<Category<*>>.getCategoryPosition(category: Category<*>): Int? {
+    this.forEachIndexed { index, c ->
         if (c.id == category.id) return index
     }
     return null

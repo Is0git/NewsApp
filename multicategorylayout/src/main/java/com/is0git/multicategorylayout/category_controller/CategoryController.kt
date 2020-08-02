@@ -7,7 +7,7 @@ interface CategoryController {
     /**
      *
      */
-    suspend fun resetCategories(categories: MutableMap<String, Category<*>>)
-    suspend fun updateCategories(categories: MutableMap<String, Category<*>>)
-    suspend fun addCategory(category: Category<*>, position: Int)
+    fun resetCategories(categories: MutableList<Category<*>>)
+    fun updateCategories(categories: MutableList<Category<*>>)
+    fun addCategory(categories: MutableList<Category<*>>)
 }

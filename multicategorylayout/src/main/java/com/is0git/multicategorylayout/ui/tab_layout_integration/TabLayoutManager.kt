@@ -23,26 +23,20 @@ abstract class TabLayoutManager(
     private var onTabSelectedListener: ((TabLayout.Tab, key: String) -> Unit)? = null
     private var updateTabLayoutJob: Job? = null
 
-    open suspend fun setupWithCategoryView(
+    open fun setupWithCategoryView(
         tabLayout: TabLayout,
-        category: Map<String, Category<*>>,
+        category: List<Category<*>>,
         listAdapter: ListAdapter<out Any, out RecyclerView.ViewHolder>?
     ) {
         if (this.tabLayout != tabLayout) throw IllegalStateException("you have to pass initial TabLayout")
         this.isAllEnabled = listAdapter != null
-        withContext(Dispatchers.Main) {
-//            for ((_, c) in category) {
-//                val tab = tabFactory.createTab(tabLayout, c, null)
-//                addTab(tab, c)
-//            }
-            tabLayout.addOnTabSelectedListener(this@TabLayoutManager)
-        }
+        tabLayout.addOnTabSelectedListener(this@TabLayoutManager)
     }
 
     fun addTab(tab: TabLayout.Tab, category: Category<*>, position: Int? = null) {
         tab.view.id = category.categoryViewId
         if (position != null) {
-            tabLayout.addTab(tab, position)
+            if (tabLayout.tabCount - 1 > position) tabLayout.addTab(tab, position) else tabLayout.addTab(tab)
             tabManagerListener?.tabAdded(tab, category, position)
         } else {
             tabLayout.addTab(tab)
@@ -70,7 +64,7 @@ abstract class TabLayoutManager(
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    for ((s, c) in categoryHashMap) {
+                    for ((_, c) in categoryHashMap) {
                         val tab = tabFactory.createTab(tabLayout, c, null)
                         addTab(tab, c)
                     }
@@ -85,8 +79,9 @@ abstract class TabLayoutManager(
     }
 
     override fun removeTab(category: Category<*>, position: Int) {
-        tabLayout.removeTabAt(position)
-        tabManagerListener?.tabRemoved(category, position)
+        val mPosition = if (isAllEnabled) position + 1 else position
+        tabLayout.removeTabAt(mPosition)
+        tabManagerListener?.tabRemoved(category, mPosition)
     }
 
     override fun updateTab(category: Category<*>, position: Int) {

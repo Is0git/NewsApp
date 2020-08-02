@@ -4,15 +4,16 @@ import com.is0git.multicategorylayout.category_data.Category
 
 
 class DefaultCategoryController : CategoryController {
-    override suspend fun resetCategories(categories: MutableMap<String, Category<*>>) {
-
+    override fun resetCategories(categories: MutableList<Category<*>>) {
+        TODO("Not yet implemented")
     }
 
-    override suspend fun updateCategories(categories: MutableMap<String, Category<*>>) {
-
+    override fun updateCategories(categories: MutableList<Category<*>>) {
+        TODO("Not yet implemented")
     }
 
-    override suspend fun addCategory(category: Category<*>, position: Int) {
-
+    override fun addCategory(categories: MutableList<Category<*>>) {
+        TODO("Not yet implemented")
     }
+
 }

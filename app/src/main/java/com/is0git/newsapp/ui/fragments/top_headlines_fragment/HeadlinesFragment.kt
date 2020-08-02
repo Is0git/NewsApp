@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import com.google.android.material.tabs.TabLayout
 import com.is0git.multicategorylayout.adapters.CategoryListAdapter
@@ -24,8 +23,6 @@ import com.is0git.newsapp.ui.fragments.BaseFragment
 import com.is0git.newsapp.utils.loadImageWith
 import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.headlines_fragment_layout) {
@@ -109,9 +106,10 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
                 entertainmentCategory,
                 generalCategory,
                 healthCategory,
-                sportsCategory,
-                technologyCategory
+                sportsCategory
+
             )
+            setupWithTabLayout(binding.categoryTabLayout, createVerticalPositionAdapter())
             addCategories(listOfCategories, viewLifecycleOwner)
             setOnCategoryTabListener(object : OnCategoryTabListener {
                 override fun onTabAdded(
@@ -152,13 +150,9 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
 
                 }
             )
-            setupWithTabLayout(binding.categoryTabLayout, createVerticalPositionAdapter())
+
             onTabSelectedListener {
                 binding.appBar.setExpanded(false)
-            }
-            lifecycleScope.launch {
-                delay(1000)
-                removeCategoryAt(2)
             }
         }
 

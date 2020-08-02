@@ -4,7 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
@@ -16,7 +19,6 @@ import com.is0git.multicategorylayout.category_modifier.DefaultCategoryModifier
 import com.is0git.multicategorylayout.listeners.OnCategoryListener
 import com.is0git.multicategorylayout.ui.tab_layout_integration.OnCategoryTabListener
 import com.is0git.multicategorylayout.ui.ui_manager.CategoryView
-import kotlinx.coroutines.launch
 
 
 class CategoryLayout : ConstraintLayout,
@@ -68,10 +70,8 @@ class CategoryLayout : ConstraintLayout,
         addCategory(category, (count - 1).coerceAtLeast(0))
     }
 
-    private fun addCategory(category: Category<*>, position: Int) {
-        lifecycleOwner?.lifecycleScope?.launch {
+    fun addCategory(category: Category<*>, position: Int) {
             categoryManager.addCategory(category, position)
-        }
     }
 
     fun removeCategory(category: Category<*>) {
@@ -92,12 +92,16 @@ class CategoryLayout : ConstraintLayout,
         categoryManager.updateCategory(position)
     }
 
+    fun removeAll() {
+        categoryManager.removeAll()
+    }
+
     fun getCategoryById(id: String): Category<*>? {
-        return categoryManager.categories[id]
+        return categoryManager.categories.find { it.id == id }
     }
 
     fun getCategoryAt(position: Int): Category<*> {
-        return categoryManager.categories.values.elementAt(position)
+        return categoryManager.categories[position]
     }
 
     /**

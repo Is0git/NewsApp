@@ -26,7 +26,6 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
         views.forEach {
             it?.id = ViewCompat.generateViewId()
         }
-        positionViews(views)
         var realViewsCount = 0
         viewGroup.apply {
             for (v in views) {
@@ -44,6 +43,7 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
             categoryViews.put(dataItem.categoryViewId, categoryView)
             uiManagerListener?.categoryViewCreated(categoryView, position)
         }
+        positionViews(views, position)
     }
 
     fun getContext(): Context {
@@ -67,6 +67,8 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
             categoryView.count
         )
         categoryViews.remove(category.categoryViewId)
+        val mCategory = categoryViews.valueAt(position)
+        positionViews(mCategory.views, position)
         uiManagerListener?.categoryViewRemoved(categoryView, position)
     }
 
@@ -105,7 +107,7 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
     }
 
     abstract fun createViews(dataItem: Category<*>): MutableList<View?>
-    abstract fun positionViews(views: List<View?>)
+    abstract fun positionViews(views: List<View?>, position: Int)
     abstract fun defineViewCreators(creatorLoader: ViewCreatorLoader, item: Category<*>)
 }
 

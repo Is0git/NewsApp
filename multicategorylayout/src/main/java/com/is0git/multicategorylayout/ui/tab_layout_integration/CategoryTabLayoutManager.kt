@@ -14,9 +14,9 @@ class CategoryTabLayoutManager(tabLayout: TabLayout, categoryTabFactory: Categor
         tabLayout.removeAllTabs()
     }
 
-    override suspend fun setupWithCategoryView(
+    override fun setupWithCategoryView(
         tabLayout: TabLayout,
-        category: Map<String, Category<*>>,
+        category: List<Category<*>>,
         listAdapter: ListAdapter<out Any, out RecyclerView.ViewHolder>?
     ) {
         super.setupWithCategoryView(tabLayout, category, listAdapter)
