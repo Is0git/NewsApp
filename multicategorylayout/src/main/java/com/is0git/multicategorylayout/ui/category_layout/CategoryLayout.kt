@@ -117,7 +117,7 @@ class CategoryLayout : ConstraintLayout,
     }
 
     fun onTabSelectedListener(listener: () -> Unit) {
-        categoryManager.tabSelectedListener = listener
+        categoryManager.tabLayoutManager?.onTabSelect = listener
     }
 
     fun setOnCategoryListener(onCategoryListener: OnCategoryListener) {

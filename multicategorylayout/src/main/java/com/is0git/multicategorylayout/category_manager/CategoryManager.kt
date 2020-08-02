@@ -1,6 +1,10 @@
 package com.is0git.multicategorylayout.category_manager
 
+import android.annotation.SuppressLint
+import android.graphics.Rect
+import android.util.Log
 import android.view.ViewGroup
+import androidx.core.util.forEach
 import androidx.core.view.get
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.LifecycleOwner
@@ -15,6 +19,7 @@ import com.is0git.multicategorylayout.category_manager.adapter.AdapterController
 import com.is0git.multicategorylayout.category_modifier.CategoryModifier
 import com.is0git.multicategorylayout.listeners.CategoryListener
 import com.is0git.multicategorylayout.listeners.OnCategoryListener
+import com.is0git.multicategorylayout.scroll_listener.CategoryScrollView
 import com.is0git.multicategorylayout.ui.tab_layout_integration.CategoryTabLayoutManager
 import com.is0git.multicategorylayout.ui.tab_layout_integration.OnCategoryTabListener
 import com.is0git.multicategorylayout.ui.tab_layout_integration.TabLayoutManager
@@ -24,6 +29,7 @@ import com.is0git.multicategorylayout.ui.ui_manager.CategoryUIManager
 import com.is0git.multicategorylayout.ui.ui_manager.CategoryView
 import com.is0git.multicategorylayout.ui.ui_manager.UIManagerListener
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class CategoryManager(
     var viewGroup: ViewGroup,
@@ -39,7 +45,6 @@ class CategoryManager(
     var tabLayoutManager: TabLayoutManager? = null
     var onCategoryTabListener: OnCategoryTabListener? = null
     var lifecycleOwner: LifecycleOwner? = null
-    lateinit var tabSelectedListener: () -> Unit
 
     init {
         uiManager.uiManagerListener = this
@@ -152,13 +157,14 @@ class CategoryManager(
     ) {
         onCategoryTabListener?.onTabUpdated(tab, category, position)
     }
-
+    // sorry for ugly code for now,  don't have time
+    @SuppressLint("ClickableViewAccessibility")
     fun setupWithTabLayout(
         tabLayout: TabLayout,
         listAdapter: ListAdapter<out Any, out RecyclerView.ViewHolder>?
     ) {
-        if (viewGroup.parent !is NestedScrollView) throw IllegalStateException("category layout has to be wrapped in NestedScrollView to setup it with tabLayout")
-        val scrollView = viewGroup.parent as NestedScrollView
+        if (viewGroup.parent !is NestedScrollView) throw IllegalStateException("category layout has to be wrapped in CategoryScrollView to setup it with tabLayout")
+        val scrollView = viewGroup.parent as CategoryScrollView
             if (tabLayoutManager == null) {
                 tabLayoutManager = CategoryTabLayoutManager(tabLayout, CategoryTabFactory())
                 tabLayoutManager!!.setOnTabUpdateListener { tab, category ->
@@ -170,18 +176,67 @@ class CategoryManager(
                     categories,
                     listAdapter
                 )
-
+                var inTabClickScroll = false
+                var isScrolling = false
                 tabLayoutManager!!.setOnTabSelectedListener { tab, key ->
                     val pos = uiManager.findPositionInView(tab.view.id, 1)
                         ?: return@setOnTabSelectedListener
                     val view = viewGroup[pos]
-                    tabSelectedListener()
-                    scrollView.smoothScrollTo(
-                        0,
-                        view.y.toInt(),
-                        getContext().resources.getInteger(R.integer.category_layout_scroll_anim)
-                    )
+                    if (!isScrolling) {
+                        tabLayoutManager?.onTabSelect?.invoke()
+                        inTabClickScroll = true
+                        scrollView.smoothScrollTo(
+                            0,
+                            view.y.toInt(),
+                            getContext().resources.getInteger(R.integer.category_layout_scroll_anim)
+                        )
+                    }
                 }
+                scrollView.setOnScrollStoppedListener(object : CategoryScrollView.OnScrollStopListener {
+                    override fun onScrollStopped(y: Int) {
+                        isScrolling = false
+                    }
+
+                })
+                scrollView.setOnScrollChangeListener(object  : NestedScrollView.OnScrollChangeListener {
+                    var lastPost: Int = -1
+                    val rect = Rect()
+                    override fun onScrollChange(
+                        v: NestedScrollView?,
+                        scrollX: Int,
+                        scrollY: Int,
+                        oldScrollX: Int,
+                        oldScrollY: Int
+                    ) {
+                        if (inTabClickScroll) {
+                            if (abs(scrollY - oldScrollY) == 1) {
+                                inTabClickScroll = false
+                                isScrolling = false
+                            }
+                            return
+                        }
+                            isScrolling = true
+                            uiManager.categoryViews.forEach { key, value ->
+                                val currentPos = value.id
+                                rect.left = 0
+                                rect.right = viewGroup.width
+                                rect.top = value.views[1].y.toInt()
+                                rect.bottom =  value.views.last().y.toInt()
+                                if (rect.contains(5, scrollY)) {
+                                    Log.d("RECTY", "WE ARE NOWIN $: ${value.category.id}")
+                                    if (currentPos !=  lastPost && abs(scrollY - oldScrollY) > 10) {
+                                        var tab: TabLayout.Tab? = null
+                                        for (a in 0 until tabLayout.tabCount) {
+                                            tab = tabLayout.getTabAt(a)
+                                            if (tab?.view?.id == currentPos) break
+                                        }
+                                        tabLayout.selectTab(tab)
+                                    }
+                                }
+                                lastPost = currentPos
+                            }
+                        }
+                })
             } else {
                 throw InstantiationException("tab layout is already integrated into category layout")
             }

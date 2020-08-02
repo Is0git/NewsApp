@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.core.widget.NestedScrollView
+        <com.is0git.multicategorylayout.scroll_listener.CategoryScrollView
             android:id="@+id/categoryScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -17,7 +17,7 @@
                 android:id="@+id/categoryLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </androidx.core.widget.NestedScrollView>
+        </com.is0git.multicategorylayout.scroll_listener.CategoryScrollView>
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
@@ -50,12 +50,11 @@
                 app:planetRadius="100dp" />
 
             <com.google.android.material.tabs.TabLayout
-                style="@style/CategoryLayout.TabLayout"
+
                 android:id="@+id/categoryTabLayout"
                 android:layout_width="match_parent"
                 android:layout_marginBottom="15dp"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways|snap" />
+                android:layout_height="wrap_content" />
         </com.google.android.material.appbar.AppBarLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

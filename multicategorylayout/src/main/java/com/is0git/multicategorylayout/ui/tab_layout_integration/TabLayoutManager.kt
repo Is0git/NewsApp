@@ -22,6 +22,7 @@ abstract class TabLayoutManager(
     private var tabUpdateListener: ((TabLayout.Tab, Category<*>) -> Boolean)? = null
     private var onTabSelectedListener: ((TabLayout.Tab, key: String) -> Unit)? = null
     private var updateTabLayoutJob: Job? = null
+    lateinit var onTabSelect: () -> Unit
 
     open fun setupWithCategoryView(
         tabLayout: TabLayout,
@@ -105,4 +106,8 @@ abstract class TabLayoutManager(
 
     override fun onTabReselected(tab: TabLayout.Tab?) {}
     override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+    companion object {
+        const val FLAG_SCROLL_TAB = 0
+    }
 }

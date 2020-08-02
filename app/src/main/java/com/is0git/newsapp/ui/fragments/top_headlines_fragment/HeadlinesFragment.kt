@@ -150,7 +150,7 @@ class HeadlinesFragment : BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.
 
                 }
             )
-
+                removeAll()
             onTabSelectedListener {
                 binding.appBar.setExpanded(false)
             }
