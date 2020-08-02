@@ -10,7 +10,7 @@ import com.is0git.multicategorylayout.ui.view_creators.*
 import com.is0git.multicategorylayout.ui.view_creators.view_creator_loader.ViewCreatorLoader
 import java.security.AccessController.getContext
 
-internal class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
+class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
 
     override fun defineViewCreators(creatorLoader: ViewCreatorLoader, item: Category<*>) {
         val headlineCreator = HeadLineCreator(getContext(), item)
