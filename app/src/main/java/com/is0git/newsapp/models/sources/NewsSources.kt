@@ -1,6 +1,5 @@
-package com.is0git.newsapp.network.models.sources
+package com.is0git.newsapp.models.sources
 
-import androidx.room.Entity
 import com.squareup.moshi.Json
 
 data class NewsSources(

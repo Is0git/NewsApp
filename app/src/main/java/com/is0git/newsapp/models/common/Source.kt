@@ -1,4 +1,4 @@
-package com.is0git.newsapp.network.models.common
+package com.is0git.newsapp.models.common
 
 import com.squareup.moshi.Json
 

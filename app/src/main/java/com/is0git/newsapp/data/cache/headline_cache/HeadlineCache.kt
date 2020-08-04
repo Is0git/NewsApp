@@ -3,7 +3,7 @@ package com.is0git.newsapp.data.cache.headline_cache
 import androidx.lifecycle.LiveData
 import com.is0git.newsapp.data.cache.DataCache
 import com.is0git.newsapp.data.db.dao.HeadlineDao
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import javax.inject.Inject
 
 class HeadlineCache @Inject constructor(private val headlineDao: HeadlineDao) : DataCache<ArticlesItem> {

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import com.is0git.multicategorylayout.databinding.ListItemOneBinding
 import com.is0git.multicategorylayout.ui.category_layout.view_holders.VerticalListViewHolder
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.utils.loadImageWith
 import javax.inject.Inject
 

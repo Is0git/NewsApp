@@ -1,4 +1,4 @@
-package com.is0git.newsapp.network.models.sources
+package com.is0git.newsapp.models.sources
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity

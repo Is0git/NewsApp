@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import androidx.paging.ExperimentalPagingApi
 import com.is0git.newsapp.R
 import com.is0git.newsapp.ui.adapters.AllHeadlinesAdapter
 import com.is0git.newsapp.vm.category_view_all.HeadlineViewAllViewModel
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class HeadlineViewAllFragment : ViewAllFragment() {
 

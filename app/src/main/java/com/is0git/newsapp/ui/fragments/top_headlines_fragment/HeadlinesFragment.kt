@@ -21,7 +21,7 @@ import com.is0git.multicategorylayout.ui.category_layout.view_holders.VerticalLi
 import com.is0git.multicategorylayout.ui.tab_layout_integration.OnCategoryTabListener
 import com.is0git.newsapp.R
 import com.is0git.newsapp.databinding.HeadlinesFragmentLayoutBinding
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.ui.fragments.BaseFragment
 import com.is0git.newsapp.ui.fragments.sources.SourcesFragment
 import com.is0git.newsapp.ui.views.filter_card.Filter

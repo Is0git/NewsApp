@@ -8,7 +8,7 @@ import com.is0git.newsapp.data.cache.DataCache
 import com.is0git.newsapp.data.cache.headline_cache.HeadlineCache
 import com.is0git.newsapp.data.db.dao.HeadlineDao
 import com.is0git.newsapp.di.qualifiers.cache.HeadlineCacheQualifier
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.network.services.NewsHeadlinesService
 import com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment
 import com.is0git.newsapp.utils.executeNetworkRequest

@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.is0git.newsapp.network.models.sources.SourcesItem
+import com.is0git.newsapp.models.sources.SourcesItem
 
 @Dao
 abstract class SourceDao {
