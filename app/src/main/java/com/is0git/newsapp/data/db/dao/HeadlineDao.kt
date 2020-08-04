@@ -3,6 +3,7 @@ package com.is0git.newsapp.data.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.is0git.newsapp.network.models.common.ArticlesItem
 
@@ -14,7 +15,7 @@ abstract class HeadlineDao {
     @Query("DELETE FROM articles_table WHERE articles_table.category == :category AND country == :country")
     abstract suspend fun deleteArticlesByCategory(category: String, country: String? = null)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insertHeadlines(headlines: List<ArticlesItem>?)
 
     @Query("SELECT * FROM articles_table WHERE country == :country")

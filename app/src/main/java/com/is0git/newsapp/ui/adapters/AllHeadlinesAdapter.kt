@@ -3,15 +3,15 @@ package com.is0git.newsapp.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import com.is0git.multicategorylayout.databinding.ListItemOneBinding
-import com.is0git.multicategorylayout.ui.category_layout.view_holders.VerticalListViewHolder
+import androidx.recyclerview.widget.RecyclerView
+import com.is0git.multicategorylayout.databinding.ListItemThreeBinding
 import com.is0git.newsapp.network.models.common.ArticlesItem
 import com.is0git.newsapp.utils.loadImageWith
 import javax.inject.Inject
 
 class AllHeadlinesAdapter @Inject constructor() :
-    PagingDataAdapter<ArticlesItem, VerticalListViewHolder>(ArticlesItem.comparator) {
-    override fun onBindViewHolder(holder: VerticalListViewHolder, position: Int) {
+    PagingDataAdapter<ArticlesItem, AllHeadlinesAdapter.ViewAllItemViewHolder>(ArticlesItem.comparator) {
+    override fun onBindViewHolder(holder: ViewAllItemViewHolder, position: Int) {
         val item = getItem(position)
         if (item != null) {
             holder.binding.descriptionText.text = item.description
@@ -20,8 +20,10 @@ class AllHeadlinesAdapter @Inject constructor() :
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VerticalListViewHolder {
-        val binding = ListItemOneBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VerticalListViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewAllItemViewHolder {
+        val binding = ListItemThreeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewAllItemViewHolder(binding)
     }
+
+    class ViewAllItemViewHolder(val binding: ListItemThreeBinding) : RecyclerView.ViewHolder(binding.root)
 }

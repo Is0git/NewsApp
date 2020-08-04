@@ -9,7 +9,6 @@ import com.squareup.moshi.Json
 @Entity(tableName = "articles_table")
 data class ArticlesItem(
 
-	@PrimaryKey(autoGenerate = true)
 	val tableId: Int,
 
 	@Json(name="publishedAt")
@@ -32,7 +31,8 @@ data class ArticlesItem(
 	val title: String? = null,
 
 	@Json(name="url")
-	val url: String? = null,
+	@PrimaryKey
+	val url: String,
 
 	@Json(name="content")
 	val content: String? = null,
@@ -44,7 +44,7 @@ data class ArticlesItem(
 	companion object {
 		val comparator = object : DiffUtil.ItemCallback<ArticlesItem>() {
 			override fun areItemsTheSame(oldItem: ArticlesItem, newItem: ArticlesItem): Boolean {
-				return oldItem.title == newItem.title
+				return oldItem.url == newItem.url
 			}
 
 			override fun areContentsTheSame(oldItem: ArticlesItem, newItem: ArticlesItem): Boolean {

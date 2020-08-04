@@ -29,7 +29,7 @@ class TopHeadlinesRepository @Inject constructor(
 ) : DefaultSingleJobRepository(),
     DataCache<ArticlesItem> by dataCache {
 
-    val country: MutableLiveData<String> = MutableLiveData("lt")
+    val country: MutableLiveData<String> = MutableLiveData("fr")
     val categoriesLiveData: List<LiveData<List<ArticlesItem>>> =
         HeadlinesFragment.categories.map { categoryString ->
             Transformations.switchMap(country) {

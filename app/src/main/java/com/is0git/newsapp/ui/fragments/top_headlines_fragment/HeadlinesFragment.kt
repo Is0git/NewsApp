@@ -1,5 +1,8 @@
 package com.is0git.newsapp.ui.fragments.top_headlines_fragment
 
+import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.is0git.multicategorylayout.adapters.CategoryListAdapter
 import com.is0git.multicategorylayout.category_data.Category
@@ -37,12 +41,11 @@ class HeadlinesFragment :
     BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.headlines_fragment_layout),
     OnFilterCheckedListener {
 
-    private val topHeadLinesViewModel: TopHeadLinesViewModel by this.navGraphViewModels(R.id.main_nav) {defaultViewModelProviderFactory}
+    private val topHeadLinesViewModel: TopHeadLinesViewModel by this.navGraphViewModels(R.id.main_nav) { defaultViewModelProviderFactory }
     lateinit var allListAdapter: CategoryListAdapter<ArticlesItem, VerticalListViewHolder>
     lateinit var behavior: BottomSheetBehavior<View>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        doNetworkWork()
         super.onViewCreated(view, savedInstanceState)
         buildCategories()
         setupBottomSheet()
@@ -68,20 +71,10 @@ class HeadlinesFragment :
                 }
                 is JobState.JobFailed -> Log.d("jobState", "failed: ${it.throwable}")
                 is JobState.JobCompleted -> {
-                    view?.postDelayed({
-                        progressDialog.dismiss()
-                    }, 1000)
+                    progressDialog.dismiss()
                 }
             }
         }
-    }
-
-    private fun doNetworkWork() {
-        topHeadLinesViewModel.getCategories(
-            *categories,
-            pageSize = DEFAULT_PAGE_SIZE,
-            country = "fr"
-        )
     }
 
     private fun setupBottomSheet() {
@@ -230,6 +223,9 @@ class HeadlinesFragment :
                 holder.binding.descriptionText.text = item.description
                 holder.binding.headerText.text = item.author
                 holder.binding.headImage.loadImageWith(item.urlToImage)
+                holder.binding.linkButton.setOnClickListener {
+                    buildDeepLink(item)
+                }
             },
             { parent, _ ->
                 val binding =
@@ -243,9 +239,17 @@ class HeadlinesFragment :
         return CategoryListAdapter(
             ArticlesItem.comparator,
             { holder, item, position ->
-                holder.binding.descriptionText.text = item.description
-                holder.binding.headerText.text = item.author
-                holder.binding.headImage.loadImageWith(item.urlToImage)
+                val stringNull = getString(android.R.string.untitled)
+                holder.binding.apply {
+                    descriptionText.text = item.description ?: stringNull
+                    headerText.text = item.author ?: stringNull
+                    headImage.loadImageWith(item.urlToImage)
+                    sourceText.text = item.source?.name
+                    dateText.text = item.publishedAt?.take(10)
+                }
+                holder.binding.linkButton.setOnClickListener {
+                    buildDeepLink(item)
+                }
             },
             { parent, _ ->
                 val binding =
@@ -267,8 +271,15 @@ class HeadlinesFragment :
         }
     }
 
+    private fun buildDeepLink(articlesItem: ArticlesItem) {
+        val intent = Intent(ACTION_VIEW, Uri.parse(articlesItem.url))
+        if (intent.resolveActivity(requireActivity().packageManager) != null) startActivity(intent)
+        else Snackbar.make(requireView(), "no browser", Snackbar.LENGTH_SHORT).show()
+    }
+
     private fun onViewAllClick(category: Category<*>) {
-        val directions = HeadlinesFragmentDirections.actionTopHeadlinesFragmentToCategoryViewAllFragment(category.id)
+        val directions =
+            HeadlinesFragmentDirections.actionTopHeadlinesFragmentToCategoryViewAllFragment(category.id)
         findNavController().navigate(directions)
     }
 

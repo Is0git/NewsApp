@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
-    app:startDestination="@id/topHeadlinesFragment"
+    app:startDestination="@id/fullNewsFragment"
     tools:ignore="UnusedNavigation">
 
     <fragment
@@ -14,6 +14,9 @@
             android:id="@+id/action_topHeadlinesFragment_to_categoryViewAllFragment"
             app:destination="@id/categoryViewAllFragment"
             app:popUpTo="@id/topHeadlinesFragment" />
+        <action
+            android:id="@+id/action_topHeadlinesFragment_to_fullNewsFragment"
+            app:destination="@id/fullNewsFragment" />
     </fragment>
     <fragment
         android:id="@+id/sourcesFragment"
@@ -26,5 +29,12 @@
         <argument
             android:name="categoryType"
             app:argType="string" />
+        <action
+            android:id="@+id/action_categoryViewAllFragment_to_fullNewsFragment"
+            app:destination="@id/fullNewsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/fullNewsFragment"
+        android:name="com.is0git.newsapp.ui.fragments.full_news_fragment.FullNewsFragment"
+        android:label="FullNewsFragment" />
 </navigation>

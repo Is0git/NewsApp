@@ -60,6 +60,7 @@ object CategoryUIFactory {
             }
             layoutManager = mLayoutManager
             this.adapter = adapter
+            itemAnimator = null
             id = ViewCompat.generateViewId()
             isNestedScrollingEnabled = false
         }

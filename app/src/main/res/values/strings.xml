@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NewsApp</string>
     <string name="filter">Filter</string>
+    <string name="read_more">READ MORE</string>
     <string-array name="countries">
         <item>ar</item>
         <item>at</item>

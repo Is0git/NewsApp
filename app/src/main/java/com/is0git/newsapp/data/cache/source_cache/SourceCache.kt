@@ -15,4 +15,8 @@ class SourceCache @Inject constructor(var sourceDao: SourceDao) : DataCache<Sour
     override fun getCachedLiveData(): LiveData<List<SourcesItem>> {
         return sourceDao.getSourcesLiveData(10)
     }
+
+    override suspend fun deleteAll() {
+
+    }
 }

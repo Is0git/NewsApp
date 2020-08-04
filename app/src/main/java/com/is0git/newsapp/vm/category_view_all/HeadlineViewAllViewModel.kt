@@ -4,15 +4,23 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.is0git.newsapp.network.models.common.ArticlesItem
+import kotlinx.coroutines.flow.Flow
 
-class HeadlineViewAllViewModel @ViewModelInject constructor(val repo: HeadlineViewAllRepository, @Assisted savedStateHandle: SavedStateHandle) : ViewModel() {
+class HeadlineViewAllViewModel @ViewModelInject constructor(
+    val repo: HeadlineViewAllRepository,
+    @Assisted savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
-    val pager = Pager(
-        config = PagingConfig(10),
-        remoteMediator = repo.mediator
-    ) {
-        repo.pagingSource
+    fun getAllArticlesStream(category: String, country: String): Flow<PagingData<ArticlesItem>> {
+        return repo.getAllArticlesStream(category, country)
+            .cachedIn(viewModelScope)
+    }
+
+    fun getAllArticlesOnlyNetworkStream(category: String, country: String): Flow<PagingData<ArticlesItem>> {
+        return repo.getAllArticlesOnlyNetworkStream(category, country).cachedIn(viewModelScope)
     }
 }

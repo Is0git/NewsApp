@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +38,7 @@
             android:layout_marginTop="8dp"
             android:fontFamily="@font/serratregular"
             android:singleLine="true"
-            android:text="HISTORY"
+            android:text="@android:string/untitled"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/roundImageCard"
             app:layout_constraintStart_toStartOf="@+id/roundImageCard"
@@ -50,14 +51,49 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
             android:fontFamily="@font/playfairbold"
             android:maxLines="3"
-            android:text="The True Age Of Bagan and The Lost Myurals of Gubyaukgyi Temple"
+            android:text="@android:string/untitled"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/roundImageCard"
             app:layout_constraintStart_toStartOf="@+id/roundImageCard"
             app:layout_constraintTop_toBottomOf="@+id/headerText" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/sourceText"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:singleLine="true"
+            android:text="@android:string/untitled"
+            app:layout_constraintEnd_toStartOf="@id/linkButton"
+            app:layout_constraintStart_toStartOf="@id/roundImageCard"
+            app:layout_constraintTop_toBottomOf="@id/descriptionText" />
+
+        <ImageButton
+            android:id="@+id/linkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tint="@color/colorPrimary"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="@id/roundImageCard"
+            app:layout_constraintTop_toTopOf="@id/sourceText"
+            app:layout_constraintBottom_toBottomOf="@id/dateText"
+            android:src="@drawable/ic_link" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dateText"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:singleLine="true"
+            android:text="@android:string/untitled"
+            app:layout_constraintEnd_toEndOf="@+id/sourceText"
+            app:layout_constraintStart_toStartOf="@id/roundImageCard"
+            app:layout_constraintTop_toBottomOf="@+id/sourceText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
