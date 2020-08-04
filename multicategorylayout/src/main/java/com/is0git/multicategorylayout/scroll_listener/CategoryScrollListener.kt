@@ -1,48 +1,47 @@
 package com.is0git.multicategorylayout.scroll_listener
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.MotionEvent
 import androidx.core.widget.NestedScrollView
 
 
-class CategoryScrollView : NestedScrollView {
-    var listener: OnScrollStopListener? = null
+class CategoryScrollView : NestedScrollView, Runnable {
+    private var lastScrollUpdate: Long = -1
+    private var scrollListener: ScrollListener? = null
 
-    interface OnScrollStopListener {
-        fun onScrollStopped(y: Int)
-    }
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
-    constructor(context: Context) : super(context) {}
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        when (ev.action) {
-            MotionEvent.ACTION_UP -> checkIfScrollStopped()
+    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+        super.onScrollChanged(l, t, oldl, oldt)
+        if (lastScrollUpdate == -1L) {
+            scrollListener?.onScrollStart()
+            postDelayed(this, 100)
         }
-        return super.onTouchEvent(ev)
+        lastScrollUpdate = System.currentTimeMillis()
     }
 
-    var initialY = 0
-    private fun checkIfScrollStopped() {
-        initialY = scrollY
-        postDelayed({
-            val updatedY = scrollY
-            if (updatedY == initialY) {
-                //we've stopped
-                if (listener != null) {
-                    listener!!.onScrollStopped(scrollY)
-                }
-            } else {
-                initialY = updatedY
-                checkIfScrollStopped()
-            }
-        }, 50)
+    override fun run() {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastScrollUpdate > 100) {
+            lastScrollUpdate = -1
+            scrollListener?.onScrollEnd()
+        } else {
+            postDelayed(this, 100)
+        }
     }
 
-    fun setOnScrollStoppedListener(yListener: OnScrollStopListener?) {
-        listener = yListener
+    interface ScrollListener {
+        fun onScrollStart()
+        fun onScrollEnd()
+    }
+
+    fun setScrollListener(listener: ScrollListener) {
+        this.scrollListener = listener
     }
 }

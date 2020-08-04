@@ -23,7 +23,8 @@ open class Category<T>(
     @AttrRes var textAppearanceRes: Int?,
     @StyleRes var buttonStyleRes: Int?,
     var hasDivider: Boolean,
-    @ColorRes var dividerColor: Int
+    @ColorRes var dividerColor: Int,
+    var onViewAllButtonClickListener: ((category: Category<*>) -> Unit)? = null
 ) {
     companion object {
         const val FLAG_NONE = 0
@@ -46,13 +47,15 @@ open class Category<T>(
         private var hasDivider = false
         @ColorRes
         private var dividerColorRes: Int = com.is0git.multicategorylayout.R.color.colorPrimary
+        private var onViewAllButtonClickListener: ((category: Category<*>) -> Unit)? = null
 
         fun setTitle(title: String?): Builder<T> {
             this.title = title
             return this
         }
 
-        fun enabledViewAll(): Builder<T> {
+        fun enabledViewAll(onViewAllClickListener: ((category: Category<*>) -> Unit)?): Builder<T> {
+            this.onViewAllButtonClickListener = onViewAllClickListener
             isViewAllEnabled = true
             return this
         }
@@ -110,7 +113,8 @@ open class Category<T>(
                 textAppearanceId,
                 buttonStyleId,
                 hasDivider,
-                dividerColorRes
+                dividerColorRes,
+                onViewAllButtonClickListener
             )
         }
     }

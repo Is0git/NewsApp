@@ -37,7 +37,9 @@ data class ArticlesItem(
 	@Json(name="content")
 	val content: String? = null,
 
-	var category: String? = null
+	var category: String? = null,
+
+	var country: String? = null
 ) {
 	companion object {
 		val comparator = object : DiffUtil.ItemCallback<ArticlesItem>() {

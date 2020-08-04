@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/main_nav"
-    app:startDestination="@id/topHeadlinesFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/topHeadlinesFragment"
+    tools:ignore="UnusedNavigation">
 
     <fragment
         android:id="@+id/topHeadlinesFragment"
         android:name="com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment"
-        android:label="TopHeadlinesFragment" />
+        android:label="TopHeadlinesFragment" >
+        <action
+            android:id="@+id/action_topHeadlinesFragment_to_categoryViewAllFragment"
+            app:destination="@id/categoryViewAllFragment"
+            app:popUpTo="@id/topHeadlinesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/sourcesFragment"
         android:name="com.is0git.newsapp.ui.fragments.sources.SourcesFragment"
         android:label="SourcesFragment" />
+    <fragment
+        android:id="@+id/categoryViewAllFragment"
+        android:name="com.is0git.newsapp.ui.fragments.view_all_fragment.HeadlineViewAllFragment"
+        android:label="CategoryViewAllFragment" >
+        <argument
+            android:name="categoryType"
+            app:argType="string" />
+    </fragment>
 </navigation>

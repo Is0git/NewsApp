@@ -10,6 +10,8 @@ import com.is0git.multicategorylayout.ui.tab_layout_integration.tab_factory.Cate
 class CategoryTabLayoutManager(tabLayout: TabLayout, categoryTabFactory: CategoryTabFactory) :
     TabLayoutManager(tabLayout, categoryTabFactory) {
 
+    var allTabListener: AllTabListener? = null
+
     init {
         tabLayout.removeAllTabs()
     }
@@ -34,7 +36,13 @@ class CategoryTabLayoutManager(tabLayout: TabLayout, categoryTabFactory: Categor
                 .build()
 
             val allTab = tabFactory.createTab(tabLayout, allCategory, R.drawable.ic_all)
+            allTab.view.id = R.id.all_tab
             addTab(allTab, allCategory, 0)
+            allTabListener?.onAllTabAdded(allTab)
         }
+    }
+
+    interface AllTabListener {
+        fun onAllTabAdded(tab: TabLayout.Tab)
     }
 }

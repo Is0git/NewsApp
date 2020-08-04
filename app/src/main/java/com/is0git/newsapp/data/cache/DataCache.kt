@@ -4,5 +4,6 @@ import androidx.lifecycle.LiveData
 
 interface DataCache<T> {
      suspend fun cacheData(data: List<T>?)
+     suspend fun deleteAll()
      fun getCachedLiveData(): LiveData<List<T>>
 }

@@ -36,7 +36,6 @@ class CategoryLayout : ConstraintLayout,
             categoryManager.lifecycleOwner = field
         }
 
-
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -66,13 +65,17 @@ class CategoryLayout : ConstraintLayout,
         return categoryManager.uiManager.categoryGroupSize
     }
 
-    fun addCategory(category: Category<*>) {
-        addCategory(category, (count - 1).coerceAtLeast(0))
+    fun updateAllList(list: List<Nothing>) {
+        categoryManager.allListAdapter?.submitList(list)
     }
 
-    fun addCategory(category: Category<*>, position: Int) {
-            categoryManager.addCategory(category, position)
-    }
+//    private fun addCategory(category: Category<*>) {
+//        addCategory(category, (count - 1).coerceAtLeast(0))
+//    }
+//
+//    fun addCategory(category: Category<*>, position: Int) {
+//            categoryManager.addCategory(category, position)
+//    }
 
     fun removeCategory(category: Category<*>) {
         val position = categoryManager.categories getCategoryPosition category
@@ -92,7 +95,7 @@ class CategoryLayout : ConstraintLayout,
         categoryManager.updateCategory(position)
     }
 
-    fun removeAll() {
+    fun removeAllCategories() {
         categoryManager.removeAll()
     }
 

@@ -2,23 +2,19 @@ package com.is0git.newsapp.vm.top_headlines
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.is0git.newsapp.data.cache.DataCache
 import com.is0git.newsapp.data.cache.headline_cache.HeadlineCache
+import com.is0git.newsapp.data.db.dao.HeadlineDao
 import com.is0git.newsapp.di.qualifiers.cache.HeadlineCacheQualifier
 import com.is0git.newsapp.network.models.common.ArticlesItem
 import com.is0git.newsapp.network.services.NewsHeadlinesService
-import com.is0git.newsapp.network.services.NewsSourceService
-import com.is0git.newsapp.ui.fragments.sources.SourcesFragment.Companion.CATEGORY_BUSINESS
-import com.is0git.newsapp.ui.fragments.sources.SourcesFragment.Companion.CATEGORY_ENTERTAINMENT
-import com.is0git.newsapp.ui.fragments.sources.SourcesFragment.Companion.CATEGORY_GENERAL
-import com.is0git.newsapp.ui.fragments.sources.SourcesFragment.Companion.CATEGORY_HEALTH
-import com.is0git.newsapp.ui.fragments.sources.SourcesFragment.Companion.CATEGORY_SCIENCE
-import com.is0git.newsapp.ui.fragments.sources.SourcesFragment.Companion.CATEGORY_SPORTS
-import com.is0git.newsapp.ui.fragments.sources.SourcesFragment.Companion.CATEGORY_TECHNOLOGY
+import com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment
 import com.is0git.newsapp.utils.executeNetworkRequest
+import com.is0git.newsapp.vm.single_job_viewmodel.DefaultSingleJobRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
@@ -28,44 +24,34 @@ import javax.inject.Inject
 class TopHeadlinesRepository @Inject constructor(
     private val newsHeadlinesService: NewsHeadlinesService,
     @ApplicationContext val applicationContext: Context,
-    @HeadlineCacheQualifier val dataCache: DataCache<ArticlesItem>
-) : DataCache<ArticlesItem> by dataCache {
+    @HeadlineCacheQualifier val dataCache: DataCache<ArticlesItem>,
+    private val dao: HeadlineDao
+) : DefaultSingleJobRepository(),
+    DataCache<ArticlesItem> by dataCache {
 
-    val categoriesLiveData = mutableListOf<LiveData<List<ArticlesItem>>>()
-    private val categories: Array<out String> = arrayOf(
-        CATEGORY_BUSINESS,
-        CATEGORY_ENTERTAINMENT,
-        CATEGORY_GENERAL,
-        CATEGORY_HEALTH,
-        CATEGORY_SCIENCE,
-        CATEGORY_SPORTS,
-        CATEGORY_TECHNOLOGY
-    )
-
-    suspend fun init() {
-        addCategories(*categories, pageSize = DEFAULT_PAGE_SIZE)
-        getCategories(*categories, pageSize = DEFAULT_PAGE_SIZE)
-    }
-
-    private suspend fun addCategories(vararg categories: String, pageSize: Int) {
-        coroutineScope {
-            val cache = (dataCache as HeadlineCache)
-            val receiverChannel = produce(capacity = Channel.BUFFERED) {
-                for (c in categories) {
-                    send(c)
-                }
-            }
-            for (s in receiverChannel) {
-                launch {
-                    val liveData = HeadlinesLiveDataFactory.create(cache, pageSize, s)
-                    categoriesLiveData.add(liveData)
-                }
+    val country: MutableLiveData<String> = MutableLiveData("lt")
+    val categoriesLiveData: List<LiveData<List<ArticlesItem>>> =
+        HeadlinesFragment.categories.map { categoryString ->
+            Transformations.switchMap(country) {
+                HeadlinesLiveDataFactory.create(
+                    dataCache as HeadlineCache,
+                    DEFAULT_PAGE_SIZE,
+                    categoryString,
+                    it
+                )
             }
         }
+    val allArticles = Transformations.switchMap(country) {
+        dao.getAllArticles(it)
     }
 
-    private suspend fun getCategories(vararg categories: String, pageSize: Int) {
+    suspend fun getCategories(
+        vararg categories: String,
+        pageSize: Int,
+        country: String? = null
+    ) {
         coroutineScope {
+            onJobStart()
             val receiveChannel = produce(capacity = Channel.BUFFERED) {
                 for (c in categories) {
                     send(c)
@@ -77,19 +63,24 @@ class TopHeadlinesRepository @Inject constructor(
                         newsHeadlinesService.getTopHeadLines(
                             0,
                             pageSize,
-                            c
+                            c,
+                            country
                         )
                     }
                     if (networkResult != null) {
-                        (dataCache as HeadlineCache).deleteHeadlinesByCategory(c)
+                        (dataCache as HeadlineCache).deleteHeadlinesByCategory(c, country)
                         networkResult.articles?.forEach {
                             it.category = c
+                            it.country = country
                         }
                         cacheData(networkResult.articles)
+                    } else {
+                        onJobFailed(Throwable("job failed"))
                     }
                 }
             }
         }
+        onJobCompleted()
     }
 
     companion object {

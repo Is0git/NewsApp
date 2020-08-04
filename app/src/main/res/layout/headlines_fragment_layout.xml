@@ -4,7 +4,8 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
         <com.is0git.multicategorylayout.scroll_listener.CategoryScrollView
             android:id="@+id/categoryScrollView"
@@ -22,39 +23,88 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
+            app:elevation="1dp"
             android:layout_height="wrap_content"
             android:background="@color/colorBackground">
 
-            <!--            <com.google.android.material.textview.MaterialTextView-->
-            <!--                style="@style/TextAppearance.MaterialComponents.Headline4"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:elevation="1dp"-->
-            <!--                android:fontFamily="@font/novabold"-->
-            <!--                android:text="DISCOVER"-->
-            <!--                android:textColor="@color/colorPrimary"-->
-            <!--                android:textStyle="bold"-->
-            <!--                android:layout_gravity="center"/>-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|snap">
 
-            <com.is0git.cosmoplanetview.ui.CosmoPlanetView
-                android:id="@+id/cosmoView"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="40dp"
-                app:atmosphereWidth="7dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_scrollFlags="scroll|snap"
-                app:planetRadius="100dp" />
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/TextAppearance.MaterialComponents.Headline4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:elevation="1dp"
+                    android:fontFamily="@font/novabold"
+                    android:text="DISCOVER"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    app:flow_verticalBias="0.7"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/cosmoView"
+                    app:layout_constraintStart_toStartOf="@+id/cosmoView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.68" />
+
+                <com.is0git.cosmoplanetview.ui.CosmoPlanetView
+                    android:id="@+id/cosmoView"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center"
+                    app:atmosphereWidth="7dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:planetRadius="100dp" />
+
+                <androidx.constraintlayout.utils.widget.ImageFilterView
+                    android:id="@+id/switchButton"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_switch"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/colorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/filtersButton"
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_adjust"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/colorPrimary" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.tabs.TabLayout
-
                 android:id="@+id/categoryTabLayout"
+                style="@style/CategoryLayout.TabLayout"
                 android:layout_width="match_parent"
-                android:layout_marginBottom="15dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp" />
         </com.google.android.material.appbar.AppBarLayout>
+
+
+            <com.is0git.newsapp.ui.views.filter_card.FilterMaterialCard
+                android:id="@+id/filterCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?colorSurface"
+                app:layout_scrollFlags="noScroll"
+                app:behavior_hideable="false"
+                app:behavior_peekHeight="20dp"
+                app:behavior_skipCollapsed="false"
+                android:fitsSystemWindows="true"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

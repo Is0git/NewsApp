@@ -89,7 +89,7 @@ abstract class TabLayoutManager(
         TODO("yet to implement")
     }
 
-    fun setOnTabSelectedListener(listener: (TabLayout.Tab, key: String) -> Unit) {
+    fun setOnTabSelectedListener(listener: ((TabLayout.Tab, key: String) -> Unit)?) {
         onTabSelectedListener = listener
     }
 

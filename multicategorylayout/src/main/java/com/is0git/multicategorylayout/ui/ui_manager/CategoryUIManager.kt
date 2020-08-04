@@ -1,13 +1,20 @@
 package com.is0git.multicategorylayout.ui.ui_manager
 
 import android.os.Build
+import android.transition.Fade
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.*
 import androidx.core.view.updateLayoutParams
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.is0git.commonlibs.ScreenUnitUtils
 import com.is0git.multicategorylayout.category_data.Category
+import com.is0git.multicategorylayout.ui.animation.AllListAnimator
+import com.is0git.multicategorylayout.ui.animation.CategoriesAnimator
+import com.is0git.multicategorylayout.ui.animation.CategoryTransitionManager
 import com.is0git.multicategorylayout.ui.view_creators.*
 import com.is0git.multicategorylayout.ui.view_creators.view_creator_loader.ViewCreatorLoader
 
@@ -25,6 +32,34 @@ class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
             listViewCreator,
             divider
         )
+    }
+
+    override fun createAllCategoryList(
+        id: Int,
+        mAdapter: ListAdapter<out Any, out RecyclerView.ViewHolder>
+    ) {
+        val recyclerView = RecyclerView(getContext()).apply {
+            this.id = id
+            layoutParams =
+                ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, MATCH_CONSTRAINT)
+                    .apply {
+                        topToTop = PARENT_ID
+                        bottomToBottom = PARENT_ID
+                    }
+            layoutManager = GridLayoutManager(context, 3)
+            adapter = mAdapter
+        }
+        allList = recyclerView
+        createAnimators(allList!!)
+        viewGroup.addView(recyclerView)
+    }
+
+    private fun createAnimators(list: RecyclerView) {
+            categoryTransitionManager = CategoryTransitionManager(viewGroup, Fade())
+            val allListAnimator = AllListAnimator(list)
+            val categoriesAnimator = CategoriesAnimator(viewGroup, list.id)
+            categoryTransitionManager.addAnimator(allListAnimator)
+            categoryTransitionManager.addAnimator(categoriesAnimator)
     }
 
     override fun createViews(dataItem: Category<*>): MutableList<View?> {
@@ -46,7 +81,7 @@ class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
                     topToTop = PARENT_ID
                 }
                 else -> {
-                    val lastChild = categoryViews.valueAt(position - 1).views.last()
+                    val lastChild = categoryViews[position - 1].views.last()
                     topToBottom = lastChild.id
                 }
             }
@@ -77,7 +112,7 @@ class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
             topMargin = ScreenUnitUtils.convertDpToPixel(10f, getContext()).toInt()
             bottomMargin = ScreenUnitUtils.convertDpToPixel(50f, getContext()).toInt()
         }
-        val lastView: View =  if (categoryViews.valueAt(position).category.hasDivider) {
+        val lastView: View = if (categoryViews[position].category.hasDivider) {
             views[3]!!.layoutParams = ConstraintLayout.LayoutParams(
                 MATCH_PARENT,
                 ScreenUnitUtils.convertDpToPixel(1f, getContext()).toInt()
@@ -89,8 +124,8 @@ class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
         } else {
             views[2]!!
         }
-        if (categoryViews.size() - 1 > position) {
-            categoryViews.valueAt(position + 1).views.first()
+        if (categoryViews.count() - 1 > position) {
+            categoryViews[position + 1].views.first()
                 .updateLayoutParams<ConstraintLayout.LayoutParams> {
                     topToBottom = lastView.id
                 }

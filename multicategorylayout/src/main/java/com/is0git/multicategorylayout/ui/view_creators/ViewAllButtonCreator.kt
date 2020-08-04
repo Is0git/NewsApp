@@ -7,6 +7,12 @@ import com.is0git.multicategorylayout.category_data.Category
 
 class ViewAllButtonCreator(context: Context, var item: Category<*>) : ViewCreator(context) {
     override fun createView(): View {
-        return CategoryUIFactory.createSeeAllButton(context, R.string.see_all)
+        val button = CategoryUIFactory.createSeeAllButton(context, R.string.see_all)
+        if (item.onViewAllButtonClickListener != null) {
+            button.setOnClickListener {
+                item.onViewAllButtonClickListener?.invoke(item)
+            }
+        }
+        return button
     }
 }

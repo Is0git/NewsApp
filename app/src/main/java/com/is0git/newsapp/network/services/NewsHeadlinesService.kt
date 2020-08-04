@@ -11,7 +11,8 @@ interface NewsHeadlinesService {
     suspend fun getTopHeadLines(
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
-        @Query("category") category: String? = null
+        @Query("category") category: String? = null,
+        @Query("country") country: String? = null
     ): Response<TopHeadlines>
 
     @GET("everything")

@@ -1,12 +1,15 @@
 package com.is0git.multicategorylayout.ui.ui_manager
 
 import android.content.Context
-import android.util.SparseArray
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.util.contains
+import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.is0git.multicategorylayout.category_data.Category
+import com.is0git.multicategorylayout.ui.animation.CategoryTransitionManager
 import com.is0git.multicategorylayout.ui.view_creators.view_creator_loader.DefaultViewCreatorLoader
 import com.is0git.multicategorylayout.ui.view_creators.view_creator_loader.ViewCreatorLoader
 
@@ -16,8 +19,11 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
 
     var viewCreatorLoader: ViewCreatorLoader = DefaultViewCreatorLoader()
     var categoryGroupSize: Int = 0
-    var categoryViews = SparseArray<CategoryView>()
+    var categoryViews = mutableListOf<CategoryView>()
     var uiManagerListener: UIManagerListener? = null
+    var allList: RecyclerView? = null
+    var isAllListHidden = false
+    lateinit var categoryTransitionManager: CategoryTransitionManager
 
     fun createCategoryView(dataItem: Category<*>, position: Int) {
         defineViewCreators(viewCreatorLoader, dataItem)
@@ -40,7 +46,7 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
         if (realViewsCount > 0) {
             val categoryView =
                 CategoryView(dataItem.categoryViewId, views as MutableList<View>, dataItem)
-            categoryViews.put(dataItem.categoryViewId, categoryView)
+            categoryViews.add(position, categoryView)
             uiManagerListener?.categoryViewCreated(categoryView, position)
         }
         positionViews(views, position)
@@ -52,9 +58,10 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
 
     fun getViewCreators() = viewCreatorLoader.viewCreators
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun removeCategoryView(category: Category<*>, position: Int) {
         var categoryPositionInViewGroup: Int = 0
-        val categoryView = categoryViews.get(category.categoryViewId)
+        val categoryView = categoryViews[position]
         for (i in 0 until viewGroup.childCount) {
             val categoryViewId = categoryView.views.first().id
             if (viewGroup.getChildAt(i).id == categoryViewId) {
@@ -66,16 +73,19 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
             categoryPositionInViewGroup,
             categoryView.count
         )
-        categoryViews.remove(category.categoryViewId)
-        val mCategory = categoryViews.valueAt(position)
-        positionViews(mCategory.views, position)
         uiManagerListener?.categoryViewRemoved(categoryView, position)
+        categoryViews.removeIf { it.id == category.categoryViewId }
+        if (categoryViews.isEmpty()) return
+        val mPosition = if (position > categoryViews.count() - 1) position - 1 else position
+        val mCategory = categoryViews[mPosition]
+        positionViews(mCategory.views, mPosition)
+
     }
 
     fun updateCategoryView(category: Category<*>, position: Int) {
-        if (!categoryViews.contains(category.categoryViewId)) return
+        val categoryView = categoryViews.find { it.id == category.categoryViewId }
+        if (categoryView == null) return
         else {
-            val categoryView = categoryViews.get(category.categoryViewId)
             // TODO: `update
             uiManagerListener?.categoryViewUpdated(categoryView, position)
         }
@@ -85,14 +95,12 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
      * returns null if position not found.
      * [basedItemPosition] is [CategoryView.views] position.
      */
-    fun findPositionInView(position: Int, basedItemPosition: Int): Int? {
-        val id = categoryViews[position].views[basedItemPosition].id
-        return findById(id)
+    fun findCategoryViewById(id: Int): CategoryView? {
+        return categoryViews.find { it.id == id}
     }
 
-    fun findPositionById(id: Int, basedItemPosition: Int): Int? {
-        val viewId = categoryViews[id].views[basedItemPosition].id
-       return findById(viewId)
+    fun findPositionById(id: Int): Int? {
+       return findById(id)
     }
 
     private fun findById(id: Int): Int? {
@@ -106,9 +114,20 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
         }
     }
 
+    fun hideAllList() {
+        categoryTransitionManager.hide()
+        isAllListHidden = true
+    }
+
+    fun showAllList() {
+        categoryTransitionManager.show()
+        isAllListHidden = false
+    }
+
     abstract fun createViews(dataItem: Category<*>): MutableList<View?>
     abstract fun positionViews(views: List<View?>, position: Int)
     abstract fun defineViewCreators(creatorLoader: ViewCreatorLoader, item: Category<*>)
+    abstract fun createAllCategoryList(id: Int,  mAdapter: ListAdapter<out Any, out RecyclerView.ViewHolder>)
 }
 
 /**

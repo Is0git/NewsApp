@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.is0git.newsapp.data.db.MainDatabase
 import com.is0git.newsapp.data.db.dao.HeadlineDao
+import com.is0git.newsapp.data.db.dao.PagedHeadlineDao
 import com.is0git.newsapp.data.db.dao.SourceDao
 import dagger.Module
 import dagger.Provides
@@ -34,5 +35,10 @@ object RoomModule {
     @Provides
     fun getHeadlinesDao(mainDatabase: MainDatabase): HeadlineDao {
         return mainDatabase.getHeadlinesDao()
+    }
+
+    @Provides
+    fun getPagedHeadlineDao(mainDatabase: MainDatabase): PagedHeadlineDao {
+        return mainDatabase.pagedHeadlineDao()
     }
 }

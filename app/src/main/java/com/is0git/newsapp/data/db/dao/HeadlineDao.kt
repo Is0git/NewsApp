@@ -8,12 +8,18 @@ import com.is0git.newsapp.network.models.common.ArticlesItem
 
 @Dao
 abstract class HeadlineDao {
-    @Query("SELECT * from articles_table WHERE articles_table.category == :category limit :limit")
-    abstract fun getHeadlineArticles(limit: Int, category: String? = null): LiveData<List<ArticlesItem>>
+    @Query("SELECT * from articles_table WHERE articles_table.category == :category AND country == :country LIMIT :limit")
+    abstract fun getHeadlineArticles(limit: Int, category: String? = null, country: String? = null): LiveData<List<ArticlesItem>>
 
-    @Query("DELETE FROM articles_table WHERE articles_table.category == :category")
-    abstract suspend fun deleteArticlesByCategory(category: String)
+    @Query("DELETE FROM articles_table WHERE articles_table.category == :category AND country == :country")
+    abstract suspend fun deleteArticlesByCategory(category: String, country: String? = null)
 
     @Insert
     abstract suspend fun insertHeadlines(headlines: List<ArticlesItem>?)
+
+    @Query("SELECT * FROM articles_table WHERE country == :country")
+    abstract fun getAllArticles(country: String?): LiveData<List<ArticlesItem>>
+
+    @Query("DELETE FROM articles_table")
+    abstract suspend fun clearAll()
 }

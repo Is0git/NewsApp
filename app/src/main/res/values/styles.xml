@@ -8,5 +8,28 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorSurface">@color/colorSurface</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="chipStyle">@style/FilterMaterialCard.ChipGroup</item>
+    </style>
+
+    <style name="FilterMaterialCard.Title" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/sansbold</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="FilterMaterialCard.ChipGroup.Title" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/sansregular</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="FilterMaterialCard.ChipGroup" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:checkable">true</item>
+        <item name="chipIconVisible">true</item>
+        <item name="checkedIconEnabled">true</item>
+        <item name="checkedIcon">@drawable/ic_next</item>
+    </style>
+
+    <style name="ViewAll.Title" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/sansbold</item>
+        <item name="textAllCaps">true</item>
     </style>
 </resources>

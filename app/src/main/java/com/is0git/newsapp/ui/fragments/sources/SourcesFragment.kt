@@ -3,10 +3,8 @@ package com.is0git.newsapp.ui.fragments.sources
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import com.is0git.multicategorylayout.category_data.Category
 import com.is0git.newsapp.R
 import com.is0git.newsapp.databinding.SourcesFragmentLayoutBinding
-import com.is0git.newsapp.network.models.sources.SourcesItem
 import com.is0git.newsapp.ui.fragments.BaseFragment
 import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,11 +26,11 @@ class SourcesFragment :
 
     private fun buildCategories() {
         binding.categoryLayout.apply {
-            val businessCategory = Category.Builder<SourcesItem>()
-                .enabledViewAll()
-                .setId(CATEGORY_BUSINESS)
-                .setTitle(CATEGORY_BUSINESS)
-                .build()
+//            val businessCategory = Category.Builder<SourcesItem>()
+//                .enabledViewAll()
+//                .setId(CATEGORY_BUSINESS)
+//                .setTitle(CATEGORY_BUSINESS)
+//                .build()
 //            val entertainmentCategory = Category.Builder<SourcesItem>()
 //                .enabledViewAll()
 //                .setId(CATEGORY_ENTERTAINMENT)
@@ -63,15 +61,15 @@ class SourcesFragment :
 //                .setId(CATEGORY_TECHNOLOGY)
 //                .setTitle(CATEGORY_TECHNOLOGY)
 //                .build()
-            val listOfCategories = mutableListOf(
-                businessCategory
+//            val listOfCategories = mutableListOf(
+
 //                entertainmentCategory,
 //                generalCategory,
 //                healthCategory,
 //                scienceCategory,
 //                sportsCategory,
 //                technologyCategory
-            )
+
 
         }
     }
