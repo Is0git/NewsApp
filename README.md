@@ -6,7 +6,7 @@
 
 <p float="left">
    <img width="400" src="http://danielktx.com/images/newsapp/Screenshot_20200806-080226.jpg" />
-  <img width="400" src="http://danielktx.com/images/newsapp/Screenshot_20200806-080328.jpg" />
+  <img width="400" src="http://danielktx.com/images/newsapp/Screenshot_20200806-080244.jpg" />
     <img width="400" src="http://danielktx.com/images/newsapp/Screenshot_20200806-080328.jpg" />
     <img width="400" src="http://danielktx.com/images/newsapp/Screenshot_20200806-080339.jpg" />
   <img width="400" src="http://danielktx.com/images/newsapp/Screenshot_20200806-080412.jpg" />
