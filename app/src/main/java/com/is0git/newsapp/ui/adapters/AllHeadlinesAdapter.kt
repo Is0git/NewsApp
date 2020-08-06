@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.is0git.multicategorylayout.databinding.ListItemThreeBinding
 import com.is0git.newsapp.R
 import com.is0git.newsapp.databinding.ArticleSeparatorViewBinding
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.paging.seperators.UiModel
 import com.is0git.newsapp.paging.seperators.UiModel.Data.Companion.UI_MODEL_SEPARATOR
 import com.is0git.newsapp.utils.DateUtils

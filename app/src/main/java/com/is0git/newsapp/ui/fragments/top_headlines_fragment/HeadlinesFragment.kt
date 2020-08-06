@@ -31,7 +31,7 @@ import com.is0git.multicategorylayout.ui.category_layout.view_holders.VerticalLi
 import com.is0git.newsapp.R
 import com.is0git.newsapp.databinding.HeadlinesFragmentLayoutBinding
 import com.is0git.newsapp.di.modules.SharedPreferencesModule.DARK_MODE_KEY
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.ui.fragments.BaseFragment
 import com.is0git.newsapp.ui.views.filter_card.Filter
 import com.is0git.newsapp.ui.views.filter_card.FilterMaterialCard
@@ -209,7 +209,7 @@ class HeadlinesFragment :
             allListAdapter = createVerticalPositionAdapter()
             setupWithTabLayout(binding.categoryTabLayout, allListAdapter)
             addCategories(listOfCategories, viewLifecycleOwner)
-            onTabSelectedListener { tab, position ->
+            onTabSelectedListener { _, position ->
                 binding.appBar.setExpanded(false)
                 topHeadLinesViewModel.savedStateHandle.set(TAB_POSITION, position)
             }
@@ -339,7 +339,7 @@ class HeadlinesFragment :
     private fun createHorizontalPositionAdapter(): CategoryListAdapter<ArticlesItem, HorizontalListViewHolder> {
         return CategoryListAdapter(
             ArticlesItem.comparator,
-            { holder, item, position ->
+            { holder, item, _ ->
                 val stringNull = getString(android.R.string.untitled)
                 holder.binding.apply {
                     descriptionText.text = item.description ?: stringNull

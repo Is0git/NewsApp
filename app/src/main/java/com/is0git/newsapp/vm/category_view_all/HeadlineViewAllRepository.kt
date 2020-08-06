@@ -6,7 +6,7 @@ import androidx.paging.*
 import com.is0git.newsapp.data.cache.DataCache
 import com.is0git.newsapp.data.cache.headline_cache.HeadlineCache
 import com.is0git.newsapp.data.db.dao.PagedHeadlineDao
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.network.services.NewsHeadlinesService
 import com.is0git.newsapp.paging.HeadlineMediator
 import com.is0git.newsapp.paging.ViewAllPagingSource

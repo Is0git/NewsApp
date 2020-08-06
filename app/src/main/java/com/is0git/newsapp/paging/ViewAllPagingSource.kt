@@ -3,7 +3,7 @@ package com.is0git.newsapp.paging
 import android.content.Context
 import androidx.paging.PagingSource
 import com.is0git.newsapp.R
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.network.services.NewsHeadlinesService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException

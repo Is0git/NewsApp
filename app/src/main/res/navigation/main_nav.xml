@@ -53,6 +53,6 @@
         android:label="FullNewsFragment">
         <argument
             android:name="article"
-            app:argType="com.is0git.newsapp.network.models.common.ArticlesItem" />
+            app:argType="com.is0git.newsapp.models.common.ArticlesItem" />
     </fragment>
 </navigation>

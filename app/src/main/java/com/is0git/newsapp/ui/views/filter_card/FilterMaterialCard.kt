@@ -98,10 +98,7 @@ class FilterMaterialCard : MaterialCardView {
         val filterView = getFilterView(filterKey)
         val chip = filterView?.group?.getChildAt(chipPosition) as Chip?
         if (chip != null) {
-            Log.d("SELECTAG", "SELECTED: ${chip?.text}: chipid ${chip?.id} id :$id")
-
-
-            filterView?.group?.check(chip?.id)
+            filterView?.group?.check(chip.id)
         }
 
     }

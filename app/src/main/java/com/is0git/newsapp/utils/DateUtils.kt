@@ -17,8 +17,8 @@ object DateUtils {
         if (date == null) return null
         val locale = Locale.getDefault()
         val simpleDateFormat = SimpleDateFormat(inPattern, locale)
-        val date = simpleDateFormat.parse(date)
+        val mDate = simpleDateFormat.parse(date)
         val outSimpleDateFormat = SimpleDateFormat(outPattern, locale)
-        return outSimpleDateFormat.format(date)
+        return outSimpleDateFormat.format(mDate)
     }
 }

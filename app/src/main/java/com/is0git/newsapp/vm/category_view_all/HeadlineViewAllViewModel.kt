@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.paging.seperators.UiModel
 import kotlinx.coroutines.flow.Flow
 

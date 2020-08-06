@@ -1,7 +1,7 @@
 package com.is0git.newsapp.paging.seperators
 
 import androidx.recyclerview.widget.DiffUtil
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.utils.DateUtils.pattern
 import java.text.SimpleDateFormat
 import java.util.*

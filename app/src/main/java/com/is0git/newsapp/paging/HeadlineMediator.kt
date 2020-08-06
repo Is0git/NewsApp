@@ -6,7 +6,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.is0git.newsapp.data.db.dao.PagedHeadlineDao
-import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.network.services.NewsHeadlinesService
 import com.is0git.newsapp.utils.executeNetworkRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
