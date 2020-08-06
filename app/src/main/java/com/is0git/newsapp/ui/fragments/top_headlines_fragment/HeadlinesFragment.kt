@@ -199,11 +199,11 @@ class HeadlinesFragment :
             val listOfCategories = mutableListOf(
                 businessCategory,
                 entertainmentCategory,
-                technologyCategory,
-                scienceCategory,
                 generalCategory,
                 healthCategory,
-                sportsCategory
+                scienceCategory,
+                sportsCategory,
+                technologyCategory
 
             )
             allListAdapter = createVerticalPositionAdapter()

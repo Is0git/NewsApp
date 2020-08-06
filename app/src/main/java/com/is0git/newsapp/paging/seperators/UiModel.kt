@@ -31,23 +31,17 @@ sealed class UiModel {
 
             val UI_MODEL_SEPARATOR = object : DiffUtil.ItemCallback<UiModel>() {
                 override fun areItemsTheSame(oldItem: UiModel, newItem: UiModel): Boolean {
-                    return when (oldItem) {
-                        is Data -> oldItem.articlesItem.url == (newItem as Data).articlesItem.url
-                        is Separator -> oldItem.description == (newItem as Separator).description
-                    }
+                    return if (oldItem is Data) return oldItem.articlesItem.url == (newItem as Data).articlesItem.url
+                    else true
                 }
 
                 override fun areContentsTheSame(oldItem: UiModel, newItem: UiModel): Boolean {
-                    return when (oldItem) {
-                        is Data -> oldItem.articlesItem == (newItem as Data).articlesItem
-                        is Separator -> oldItem.description == (newItem as Separator).description
-                    }
+                    return if (oldItem is Data) oldItem.articlesItem == (newItem as Data).articlesItem
+                    else true
                 }
-
             }
         }
     }
 
     class Separator(val description: String?) : UiModel()
-
 }

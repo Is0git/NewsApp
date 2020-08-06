@@ -32,5 +32,8 @@ class ViewAllPagingSource @Inject constructor(
         } catch (ex: IOException) {
             return LoadResult.Error(Throwable("no internet? Pagination is not cached ;) $ex"))
         }
+        catch (ex: Exception) {
+            return LoadResult.Error(Throwable("network error $ex"))
+        }
     }
 }
