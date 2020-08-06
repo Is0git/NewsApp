@@ -15,8 +15,10 @@
 
 <h3>Description</h3>
 <p>Simple application that is made for looking up news around the world. The App was written in MVVM architecture using many great tools that android framework provides (including new libraries from jetpack: Hilt and Paging3) </p>
-
+   
   <li>Kotlin coroutines</li> 
+  <li>Caches data, handles configurations changes and process death</li> 
+  <li>Great UI with animations</li> 
   <li>Hilt</li>
   <li>Paging3</li>
   <li>Material design</li>
