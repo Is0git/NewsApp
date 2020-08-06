@@ -1,4 +1,4 @@
-package com.is0git.newsapp.job_handlers
+package com.is0git.newsapp.utils
 
 import androidx.lifecycle.MutableLiveData
 import com.is0git.newsapp.utils.JobState

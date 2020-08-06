@@ -1,7 +1,7 @@
 package com.is0git.newsapp.di.modules
 
 import androidx.lifecycle.MutableLiveData
-import com.is0git.newsapp.job_handlers.DefaultJobHandler
+import com.is0git.newsapp.utils.DefaultJobHandler
 import com.is0git.newsapp.utils.JobState
 import com.is0git.newsapp.vm.single_job.JobStateHandler
 import dagger.Binds
