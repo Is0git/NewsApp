@@ -1,7 +1,7 @@
 # NewsApp
 <h3>PREVIEW</h3>
 <p float="left">
-<a href="http://danielktx.com/images/newsapp/newsapp.mp4" type="video/mp4">DEMO VIDEO</a>
+<h1><a href="http://danielktx.com/images/newsapp/newsapp.mp4" type="video/mp4">DEMO VIDEO</a><h1>
 </p>
 
 <p float="left">
