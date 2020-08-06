@@ -46,7 +46,7 @@ class CategoryLayout : ConstraintLayout,
 
     fun addCategories(categories: List<Category<*>>, lifeCycleOwner: LifecycleOwner) {
         addObserver(lifeCycleOwner)
-            categoryManager.addCategories(categories)
+        categoryManager.addCategories(categories)
 
     }
 
@@ -76,6 +76,10 @@ class CategoryLayout : ConstraintLayout,
 //    fun addCategory(category: Category<*>, position: Int) {
 //            categoryManager.addCategory(category, position)
 //    }
+
+    fun getAllList(): RecyclerView? {
+        return categoryManager.uiManager.allList
+    }
 
     fun removeCategory(category: Category<*>) {
         val position = categoryManager.categories getCategoryPosition category
@@ -119,12 +123,25 @@ class CategoryLayout : ConstraintLayout,
         this.categoryManager.onCategoryTabListener = categoryTabListener
     }
 
-    fun onTabSelectedListener(listener: () -> Unit) {
+    fun onTabSelectedListener(listener: (tab: TabLayout.Tab?, position: Int) -> Unit) {
         categoryManager.tabLayoutManager?.onTabSelect = listener
     }
 
     fun setOnCategoryListener(onCategoryListener: OnCategoryListener) {
         this.categoryManager.onCategoryListener = onCategoryListener
+    }
+
+    fun getTab(position: Int): TabLayout.Tab? {
+        return categoryManager.tabLayoutManager?.tabLayout?.getTabAt(position)
+    }
+
+    private fun selectTab(tab: TabLayout.Tab?) {
+        categoryManager.selectTab(tab)
+    }
+
+    fun selectTabByPosition(position: Int) {
+        val tab = getTab(position)
+        selectTab(tab)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

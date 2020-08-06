@@ -14,4 +14,9 @@
         <item name="tabMode">scrollable</item>
         <item name="tabIconTint">@color/colorOnSurface</item>
     </style>
+
+    <style name="CategoryLayout.TabLayout.TextAppearance">
+        <item name="fontFamily">@font/playfairbold</item>
+        <item name="android:textSize">@dimen/material_text_headline6</item>
+    </style>
 </resources>

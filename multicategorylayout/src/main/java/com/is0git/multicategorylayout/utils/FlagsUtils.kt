@@ -5,7 +5,7 @@ infix fun Int.hasEnabled(flag: Int): Boolean {
 }
 
 infix fun Int.enable(flag: Int): Int {
-   return this or flag
+    return this or flag
 }
 
 infix fun Int.disable(flag: Int): Int {

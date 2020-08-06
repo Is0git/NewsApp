@@ -4,12 +4,16 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
+import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.TextViewCompat
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textview.MaterialTextView
 import com.is0git.commonlibs.ScreenUnitUtils
 import com.is0git.newsapp.R
@@ -24,7 +28,7 @@ class FilterMaterialCard : MaterialCardView {
     @Inject
     lateinit var filterChipCreator: ChipCreator
     lateinit var titleText: MaterialTextView
-    val filters = mutableListOf<Filter>()
+    val filters = mutableMapOf<String, FilterView>()
     private val margin = ScreenUnitUtils.convertDpToPixel(24f, context).toInt()
     private val linearLayout =
         LinearLayout(context).also {
@@ -79,19 +83,48 @@ class FilterMaterialCard : MaterialCardView {
     }
 
     fun addFilter(filter: Filter) {
-        filters.add(filter)
-        val views = filterChipCreator.createChipGroup(filter)
-        for (v in views) {
+        val filterView = filterChipCreator.createFilterView(filter)
+        for (v in filterView.views) {
             linearLayout.addView(v)
         }
+        filters[filter.displayName] = filterView
+    }
+
+    fun getFilterView(key: String): FilterView? {
+        return filters[key]
+    }
+
+    fun selectChip(filterKey: String, chipPosition: Int) {
+        val filterView = getFilterView(filterKey)
+        val chip = filterView?.group?.getChildAt(chipPosition) as Chip?
+        if (chip != null) {
+            Log.d("SELECTAG", "SELECTED: ${chip?.text}: chipid ${chip?.id} id :$id")
+
+
+            filterView?.group?.check(chip?.id)
+        }
+
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        if (parent is NestedScrollView) (parent as NestedScrollView).isNestedScrollingEnabled = false
+        if (parent is NestedScrollView) (parent as NestedScrollView).isNestedScrollingEnabled =
+            false
     }
 
     fun setOnFilterCheckedListener(listener: OnFilterCheckedListener?) {
         filterChipCreator.setOnFilterCheckedListener(listener)
     }
+
+    class FilterView(val group: ChipGroup, val filter: Filter, var views: List<View>)
+}
+
+infix fun ChipGroup.findChipById(id: Int): Chip? {
+    for (i in 0 until this.childCount) {
+        val chip = this.getChildAt(i)
+        if (chip.id == id) {
+            return chip as Chip
+        }
+    }
+    return null
 }

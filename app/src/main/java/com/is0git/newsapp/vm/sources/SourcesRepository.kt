@@ -19,6 +19,6 @@ open class SourcesRepository @Inject constructor(
         val result = executeNetworkRequest(appContext) {
             newsApiService.getNewsSources()
         }
-        if (result != null)  cacheData(result.sources)
+        if (result != null) cacheData(result.sources)
     }
 }

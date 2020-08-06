@@ -22,7 +22,7 @@ abstract class TabLayoutManager(
     private var tabUpdateListener: ((TabLayout.Tab, Category<*>) -> Boolean)? = null
     private var onTabSelectedListener: ((TabLayout.Tab, key: String) -> Unit)? = null
     private var updateTabLayoutJob: Job? = null
-    lateinit var onTabSelect: () -> Unit
+    var onTabSelect: ((tab: TabLayout.Tab?, position: Int) -> Unit)? = null
 
     open fun setupWithCategoryView(
         tabLayout: TabLayout,
@@ -37,7 +37,10 @@ abstract class TabLayoutManager(
     fun addTab(tab: TabLayout.Tab, category: Category<*>, position: Int? = null) {
         tab.view.id = category.categoryViewId
         if (position != null) {
-            if (tabLayout.tabCount - 1 > position) tabLayout.addTab(tab, position) else tabLayout.addTab(tab)
+            if (tabLayout.tabCount - 1 > position) tabLayout.addTab(
+                tab,
+                position
+            ) else tabLayout.addTab(tab)
             tabManagerListener?.tabAdded(tab, category, position)
         } else {
             tabLayout.addTab(tab)

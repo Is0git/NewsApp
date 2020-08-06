@@ -101,10 +101,6 @@ class CategoryManager(
 
     @Suppress("unchecked_cast")
     override fun updateCategoryAdapter(categoryId: String, list: List<*>) {
-//        if (allListAdapter != null) {
-//            allListAdapter?.submitList(list as List<Nothing>)
-//            Log.d("ADAP", "${allListAdapter?.itemCount}")
-//        }
         val category = categories.find { it.id == categoryId }
         if (category == null) return
         else {
@@ -178,10 +174,17 @@ class CategoryManager(
             tabLayoutManager = CategoryTabLayoutManager(tabLayout, CategoryTabFactory()).also {
                 it.allTabListener = this
             }
-            tabLayoutManager!!.setOnTabUpdateListener { tab, category ->
-                true
-            }
             tabLayoutManager!!.tabManagerListener = this@CategoryManager
+            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabReselected(tab: TabLayout.Tab?) {}
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    tabLayoutManager?.onTabSelect?.invoke(tab, tabLayout.selectedTabPosition)
+                }
+
+            })
             tabLayoutManager!!.setupWithCategoryView(
                 tabLayout,
                 categories,
@@ -190,22 +193,21 @@ class CategoryManager(
             var inTabClickScroll = false
             var isScrolling = false
             val listener = { tab: TabLayout.Tab, key: String ->
-                Log.d("SHOWD", "${tab.text}")
                 if (tab.text == getContext().getString(R.string.all)) {
-                    Log.d("SHOWD", "showed")
                     uiManager.categoryTransitionManager.show()
-                    uiManager.allList!!.postDelayed({
-                       scrollView.smoothScrollTo(0, 0)
-                    },
-                    400)
+                    uiManager.allList!!.postDelayed(
+                        {
+                            scrollView.smoothScrollTo(0, 0)
+                        },
+                        400
+                    )
                 } else {
                     uiManager.categoryTransitionManager.hide()
                 }
                 val posY = uiManager.findCategoryViewById(tab.view.id)?.views?.get(1)?.y
                 if (posY != null) {
                     if (!isScrolling) {
-                        Log.d("TESTY", "CLICKED")
-                        tabLayoutManager?.onTabSelect?.invoke()
+                        tabLayoutManager?.onTabSelect?.invoke(tab, tabLayout.selectedTabPosition)
                         inTabClickScroll = true
                         scrollView.postDelayed({
                             inTabClickScroll = false
@@ -221,11 +223,11 @@ class CategoryManager(
             tabLayoutManager!!.setOnTabSelectedListener(listener)
             scrollView.setScrollListener(object : CategoryScrollView.ScrollListener {
                 override fun onScrollStart() {
+                    Log.d("CategoryManager", "scroll start")
                 }
 
                 override fun onScrollEnd() {
                     isScrolling = false
-                    Log.d("RECTY", "is Scroll$isScrolling")
                 }
 
             })
@@ -240,35 +242,48 @@ class CategoryManager(
                     oldScrollY: Int
                 ) {
                     isScrolling = true
-                    Log.d("RECTY", "tab click $inTabClickScroll , : scrollinng $isScrolling")
                     if (inTabClickScroll) {
                         return
                     }
                     if (uiManager.allList != null && tabLayout.selectedTabPosition == 0) return
                     uiManager.categoryViews.forEach { value ->
-                        val currentPos = value.id
                         rect.left = 0
                         rect.right = viewGroup.width
                         rect.top = value.views[1].y.toInt()
                         rect.bottom = value.views.last().y.toInt()
-                        if (rect.contains(5, scrollY)) {
-//                            Log.d("RECTY", "WE ARE NOWIN $: ${value.category.id}")
+                        if (rect.contains(0, scrollY)) {
+                            val currentPos = value.id
                             if (currentPos != lastPost && abs(scrollY - oldScrollY) > 10) {
                                 var tab: TabLayout.Tab? = null
                                 for (a in 0 until tabLayout.tabCount) {
                                     tab = tabLayout.getTabAt(a)
                                     if (tab?.view?.id == currentPos) break
                                 }
+                                Log.d(
+                                    "RECTY",
+                                    "WE ARE NOWIN $: ${value.category.id}: istabclick: ${inTabClickScroll}"
+                                )
                                 tabLayout.selectTab(tab)
                             }
+                            lastPost = currentPos
                         }
-                        lastPost = currentPos
                     }
                 }
             })
         } else {
             throw InstantiationException("tab layout is already integrated into category layout")
         }
+    }
+
+    fun selectTab(tab: TabLayout.Tab?) {
+        tabLayoutManager?.also {
+            if (it.isAllEnabled && tab?.text == getContext().getString(R.string.all)) {
+                uiManager.categoryTransitionManager.showWithoutAnim()
+            } else {
+                uiManager.categoryTransitionManager.hideWithoutAnim()
+            }
+        }
+        tabLayoutManager?.tabLayout?.selectTab(tab)
     }
 
     fun clear() {
@@ -282,9 +297,13 @@ class CategoryManager(
         uiManager.createAllCategoryList(tab.view.id, allListAdapter!!)
         if (tabLayoutManager!!.isAllEnabled) {
             if (tabLayoutManager!!.tabLayout.selectedTabPosition == 0) {
-                uiManager.hideAllList()
+                viewGroup.post {
+                    uiManager.categoryTransitionManager.showWithoutAnim()
+                }
             } else {
-                uiManager.hideAllList()
+                viewGroup.post {
+                    uiManager.hideAllList()
+                }
             }
         }
     }

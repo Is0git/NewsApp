@@ -7,13 +7,13 @@
                 android:angle="-90"
                 android:endColor="@android:color/transparent"
                 android:centerColor="@android:color/transparent"
-                android:startColor="@color/colorBackground" />
+                android:startColor="@color/colorSurface" />
         </shape>
     </item>
 
     <item android:height="@dimen/gradient_top_margin">
         <shape >
-            <solid android:color="@color/colorBackground"/>
+            <solid android:color="@color/colorSurface"/>
         </shape>
     </item>
 
@@ -23,15 +23,15 @@
                 android:angle="90"
                 android:centerColor="@android:color/transparent"
                 android:centerY="0.9"
-                android:endColor="@color/colorBackground"
-                android:startColor="@color/colorBackground" />
+                android:endColor="@color/colorSurface"
+                android:startColor="@color/colorSurface" />
         </shape>
 
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
             <gradient
                 android:angle="-90"
                 android:endColor="@android:color/transparent"
-                android:startColor="@color/colorBackground" />
+                android:startColor="@color/colorSurface" />
         </shape>
 
     </item>

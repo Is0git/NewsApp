@@ -16,9 +16,6 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/gradient_top_margin"
             android:scaleType="centerCrop"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
-            android:src="@drawable/ceo"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/contentText" />
 
@@ -32,11 +29,11 @@
 
         <ImageButton
             android:id="@+id/backButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="40dp"
             android:layout_marginLeft="40dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:background="@android:color/transparent"
             android:rotationY="180"
             android:src="@drawable/ic_next"
@@ -46,39 +43,95 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/titleText"
-            style="@style/TextAppearance.MaterialComponents.Headline4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:layout_marginEnd="40dp"
             android:layout_marginRight="40dp"
-            android:fontFamily="@font/playfairregular"
+            android:fontFamily="@font/playfairbold"
             android:maxLines="3"
-            android:shadowColor="@android:color/black"
+            android:shadowColor="@color/colorBackground"
             android:shadowDx="5"
             android:shadowDy="5"
             android:shadowRadius="8"
-            android:text="The impact of Climate change and how it is going to affect us"
+            android:text="@android:string/untitled"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/material_text_headline4"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/backButton"
             app:layout_constraintTop_toBottomOf="@+id/backButton" />
 
+        <ImageView
+            android:id="@+id/categoryIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_category"
+            app:layout_constraintEnd_toStartOf="@+id/categoryText"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/view"
+            app:layout_constraintStart_toStartOf="@+id/titleText"
+            app:layout_constraintTop_toBottomOf="@+id/titleText"
+            app:tint="@color/colorPrimary" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/categoryText"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:singleLine="true"
+            android:text="@android:string/untitled"
+            app:layout_constraintBottom_toBottomOf="@+id/categoryIcon"
+            app:layout_constraintEnd_toStartOf="@+id/countryIcon"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/categoryIcon"
+            app:layout_constraintTop_toTopOf="@+id/categoryIcon" />
+
+        <ImageView
+            android:id="@+id/countryIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/ic_country"
+            app:layout_constraintBottom_toBottomOf="@+id/categoryText"
+            app:layout_constraintEnd_toStartOf="@+id/countryText"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/categoryText"
+            app:layout_constraintTop_toTopOf="@+id/categoryText"
+            app:tint="@color/colorPrimary" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/countryText"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:singleLine="true"
+            android:text="@android:string/untitled"
+            app:layout_constraintBottom_toBottomOf="@+id/countryIcon"
+            app:layout_constraintEnd_toEndOf="@+id/titleText"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/countryIcon"
+            app:layout_constraintTop_toTopOf="@+id/countryIcon"
+            app:textAllCaps="true" />
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/contentText"
-            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/playfairregular"
-            android:shadowColor="@android:color/black"
+            android:shadowColor="@color/colorBackground"
             android:shadowDx="5"
             android:shadowDy="5"
             android:shadowRadius="8"
-            android:text="The impact of Climate change and how it is going to affect us
-The impact of Climate change and how it is going to affect us
-The impact of Climate change and how it is going to affect us"
+            android:text="@android:string/untitled"
+            android:textSize="@dimen/material_text_body1"
             android:textStyle="normal"
             app:layout_constraintEnd_toEndOf="@+id/titleText"
             app:layout_constraintHorizontal_bias="0.0"
@@ -97,21 +150,22 @@ The impact of Climate change and how it is going to affect us"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/contentText"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/materialButton" />
+            app:layout_constraintStart_toEndOf="@+id/readMoreButton" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/authorText"
             style="@style/TextAppearance.MaterialComponents.Headline6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:shadowColor="@android:color/black"
+            android:shadowColor="@color/colorBackground"
             android:shadowDx="5"
             android:shadowDy="5"
             android:shadowRadius="8"
             android:text="Elon Musk"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/dateText"
-            app:layout_constraintStart_toStartOf="@+id/materialButton" />
+            app:layout_constraintEnd_toStartOf="@+id/authorImage"
+            app:layout_constraintStart_toStartOf="@+id/readMoreButton" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dateText"
@@ -119,24 +173,25 @@ The impact of Climate change and how it is going to affect us"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:shadowColor="@android:color/black"
+            android:shadowColor="@color/colorBackground"
             android:shadowDx="5"
             android:shadowDy="5"
             android:shadowRadius="8"
             android:text="Jun 20, 2020"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/materialButton"
+            app:layout_constraintBottom_toTopOf="@+id/readMoreButton"
             app:layout_constraintEnd_toEndOf="@+id/authorText"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/authorText" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/materialButton"
+            android:id="@+id/readMoreButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="64dp"
             android:text="@string/read_more"
             android:textStyle="bold"
+            app:icon="@drawable/ic_link"
             app:layout_constraintBottom_toBottomOf="@+id/newsImage"
             app:layout_constraintStart_toStartOf="@+id/contentText" />
 
@@ -144,9 +199,9 @@ The impact of Climate change and how it is going to affect us"
             android:id="@+id/divider"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:background="?android:attr/listDivider"
             app:layout_constraintStart_toStartOf="@+id/titleText"
-            app:layout_constraintTop_toBottomOf="@+id/titleText" />
+            app:layout_constraintTop_toBottomOf="@+id/categoryIcon" />
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>

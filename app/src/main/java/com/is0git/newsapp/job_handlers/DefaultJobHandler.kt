@@ -2,7 +2,7 @@ package com.is0git.newsapp.job_handlers
 
 import androidx.lifecycle.MutableLiveData
 import com.is0git.newsapp.utils.JobState
-import com.is0git.newsapp.vm.single_job_viewmodel.JobStateHandler
+import com.is0git.newsapp.vm.single_job.JobStateHandler
 
 class DefaultJobHandler(val jobStates: MutableLiveData<JobState>) : JobStateHandler {
     override fun onJobStart() {

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.is0git.newsapp.network.models.common.ArticlesItem
+import com.is0git.newsapp.paging.seperators.UiModel
 import kotlinx.coroutines.flow.Flow
 
 class HeadlineViewAllViewModel @ViewModelInject constructor(
@@ -20,7 +21,10 @@ class HeadlineViewAllViewModel @ViewModelInject constructor(
             .cachedIn(viewModelScope)
     }
 
-    fun getAllArticlesOnlyNetworkStream(category: String, country: String): Flow<PagingData<ArticlesItem>> {
+    fun getAllArticlesOnlyNetworkStream(
+        category: String,
+        country: String
+    ): Flow<PagingData<UiModel>> {
         return repo.getAllArticlesOnlyNetworkStream(category, country).cachedIn(viewModelScope)
     }
 }

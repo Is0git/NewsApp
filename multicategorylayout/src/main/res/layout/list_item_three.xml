@@ -1,65 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/roundImageCard"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             app:cardCornerRadius="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/headImage"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_width="150dp"
+                android:layout_height="110dp"
                 android:scaleType="centerCrop" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/headerText"
             style="@style/TextAppearance.MaterialComponents.Caption"
-            android:layout_width="0dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:fontFamily="@font/serratregular"
             android:singleLine="true"
             android:text="HISTORY"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/roundImageCard"
-            app:layout_constraintStart_toStartOf="@+id/roundImageCard"
-            app:layout_constraintTop_toBottomOf="@+id/roundImageCard"
-            app:textAllCaps="true" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/roundImageCard"
+            app:layout_constraintTop_toTopOf="@+id/roundImageCard" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/descriptionText"
-            style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/playfairbold"
+            android:maxLines="5"
+            android:text="The True Age Of Bagan and The Lost Myurals of Gubyaukgyi Temple"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/material_text_body2"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/linkButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/headerText"
+            app:layout_constraintTop_toBottomOf="@+id/headerText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/sourceText"
+            style="@style/TextAppearance.MaterialComponents.Body2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/playfairbold"
-            android:maxLines="3"
-            android:text="The True Age Of Bagan and The Lost Myurals of Gubyaukgyi Temple"
+            android:singleLine="true"
+            android:text="@android:string/untitled"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/roundImageCard"
+            app:layout_constraintEnd_toStartOf="@+id/dateText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="@+id/roundImageCard"
-            app:layout_constraintTop_toBottomOf="@+id/headerText" />
+            app:layout_constraintTop_toBottomOf="@+id/roundImageCard" />
+
+        <ImageButton
+            android:id="@+id/linkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/view_all_button_shape"
+            android:gravity="end"
+            android:src="@drawable/ic_link"
+            app:layout_constraintBottom_toBottomOf="@+id/sourceText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/sourceText"
+            app:tint="@color/colorBackground" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dateText"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="end"
+            android:singleLine="true"
+            android:text="@android:string/untitled"
+            android:textAlignment="viewEnd"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/linkButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/sourceText"
+            app:layout_constraintTop_toTopOf="@+id/sourceText" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintTop_toBottomOf="@id/linkButton" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -11,16 +11,20 @@ import com.is0git.newsapp.di.qualifiers.cache.HeadlineCacheQualifier
 import com.is0git.newsapp.network.models.common.ArticlesItem
 import com.is0git.newsapp.network.services.NewsHeadlinesService
 import com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment
+import com.is0git.newsapp.utils.LocaleUtils.getCurrentCountryCode
 import com.is0git.newsapp.utils.executeNetworkRequest
-import com.is0git.newsapp.vm.single_job_viewmodel.DefaultSingleJobRepository
+import com.is0git.newsapp.vm.single_job.DefaultSingleJobRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 class TopHeadlinesRepository @Inject constructor(
     private val newsHeadlinesService: NewsHeadlinesService,
     @ApplicationContext val applicationContext: Context,
@@ -29,21 +33,22 @@ class TopHeadlinesRepository @Inject constructor(
 ) : DefaultSingleJobRepository(),
     DataCache<ArticlesItem> by dataCache {
 
-    val country: MutableLiveData<String> = MutableLiveData("fr")
+    val countryCode = applicationContext.getCurrentCountryCode().toLowerCase(Locale.ROOT)
+    val country: MutableLiveData<String> = MutableLiveData(countryCode)
     val categoriesLiveData: List<LiveData<List<ArticlesItem>>> =
         HeadlinesFragment.categories.map { categoryString ->
-            Transformations.switchMap(country) {
+            Transformations.distinctUntilChanged(Transformations.switchMap(country) {
                 HeadlinesLiveDataFactory.create(
                     dataCache as HeadlineCache,
                     DEFAULT_PAGE_SIZE,
                     categoryString,
                     it
                 )
-            }
+            })
         }
-    val allArticles = Transformations.switchMap(country) {
+    val allArticles = Transformations.distinctUntilChanged(Transformations.switchMap(country) {
         dao.getAllArticles(it)
-    }
+    })
 
     suspend fun getCategories(
         vararg categories: String,
@@ -70,8 +75,7 @@ class TopHeadlinesRepository @Inject constructor(
                     if (networkResult != null) {
                         (dataCache as HeadlineCache).deleteHeadlinesByCategory(c, country)
                         networkResult.articles?.forEach {
-                            it.category = c
-                            it.country = country
+                            updateArticleForRoom(it, c, country)
                         }
                         cacheData(networkResult.articles)
                     } else {
@@ -81,6 +85,14 @@ class TopHeadlinesRepository @Inject constructor(
             }
         }
         onJobCompleted()
+    }
+
+
+    private fun updateArticleForRoom(article: ArticlesItem?, category: String?, country: String?) {
+        article?.apply {
+            this.category = category
+            this.country = country
+        }
     }
 
     companion object {

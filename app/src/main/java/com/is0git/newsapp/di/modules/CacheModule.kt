@@ -14,5 +14,5 @@ import dagger.hilt.android.components.ApplicationComponent
 abstract class CacheModule {
     @Binds
     @HeadlineCacheQualifier
-    abstract fun getHeadlineCache(cache: HeadlineCache) : DataCache<ArticlesItem>
+    abstract fun getHeadlineCache(cache: HeadlineCache): DataCache<ArticlesItem>
 }

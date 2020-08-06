@@ -1,19 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MotionScene 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="1000">
-       <KeyFrameSet>
-       </KeyFrameSet>
+        motion:duration="500"
+        motion:motionInterpolator="easeOut">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                android:rotation="0"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:translationX="-80dp"
+                motion:framePosition="0"
+                motion:motionTarget="@+id/backButton" />
+            <KeyAttribute
+                android:rotation="0"
+                android:translationX="0dp"
+                motion:framePosition="61"
+                motion:motionTarget="@+id/backButton" />
+            <KeyAttribute
+                android:rotation="45"
+                android:scaleX="1.2"
+                motion:framePosition="180"
+                motion:motionTarget="@+id/backButton" />
+            <KeyAttribute
+                android:alpha="1"
+                android:rotation="180"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                motion:framePosition="100"
+                motion:motionTarget="@+id/backButton" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="100dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/titleText" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="100dp"
+                motion:framePosition="55"
+                motion:motionTarget="@id/titleText" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationX="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/titleText" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="100dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/contentText" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="100dp"
+                motion:framePosition="75"
+                motion:motionTarget="@id/contentText" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationX="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/contentText" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationY="50dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/readMoreButton" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationY="50dp"
+                motion:framePosition="50"
+                motion:motionTarget="@id/readMoreButton" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationY="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/readMoreButton" />
+
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="-50dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/authorText" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationX="0dp"
+                motion:framePosition="70"
+                motion:motionTarget="@id/authorText" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationX="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/authorText" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="-50dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/dateText" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationX="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/dateText" />
+            <KeyAttribute
+                android:translationY="100dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/view" />
+            <KeyAttribute
+                android:translationY="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/view" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="0"
+                motion:motionTarget="@id/newsImage" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="30"
+                motion:motionTarget="@id/newsImage" />
+            <KeyAttribute
+                android:alpha="1"
+                motion:framePosition="100"
+                motion:motionTarget="@id/newsImage" />
+            <KeyAttribute
+                android:alpha="0"
+                android:scaleX="0.1"
+                android:scaleY="0.1"
+                motion:framePosition="0"
+                motion:motionTarget="@id/authorImage" />
+            <KeyAttribute
+                android:alpha="1"
+                android:scaleX="1"
+                android:scaleY="1"
+                android:translationY="-30dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/authorImage" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationX="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/countryIcon" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="-20dp"
+                motion:framePosition="50"
+                motion:motionTarget="@id/countryIcon" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="-20dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/countryIcon" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationX="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/categoryIcon" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="-20dp"
+                motion:framePosition="50"
+                motion:motionTarget="@id/categoryIcon" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationX="-20dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/categoryIcon" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationY="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/categoryText" />\
+            <KeyAttribute
+                android:alpha="0"
+                android:translationY="-20dp"
+                motion:framePosition="50"
+                motion:motionTarget="@id/categoryText" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationY="-20dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/categoryText" />
+            <KeyAttribute
+                android:alpha="1"
+                android:translationY="0dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/countryText" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationY="-20dp"
+                motion:framePosition="50"
+                motion:motionTarget="@id/countryText" />
+            <KeyAttribute
+                android:alpha="0"
+                android:translationY="-20dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/countryText" />
+        </KeyFrameSet>
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:attr/listDivider"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/categoryIcon" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:attr/listDivider"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="@id/titleText"
+            motion:layout_constraintTop_toBottomOf="@+id/categoryIcon" />
     </ConstraintSet>
 </MotionScene>

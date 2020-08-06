@@ -7,18 +7,26 @@ import android.view.ViewGroup
 
 class CategoryTransitionManager(var viewGroup: ViewGroup, var transtion: Transition) {
 
-    var listOfAnimators: MutableList<UIAnimator>  = mutableListOf()
+    var listOfAnimators: MutableList<UIAnimator> = mutableListOf()
 
     fun show() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             TransitionManager.beginDelayedTransition(viewGroup, transtion)
         }
+        showWithoutAnim()
+    }
+
+    fun showWithoutAnim() {
         listOfAnimators.forEach {
             it.playRevealAnimation()
         }
     }
 
     fun hide() {
+        hideWithoutAnim()
+    }
+
+    fun hideWithoutAnim() {
         listOfAnimators.forEach {
             it.playHideAnimation()
         }

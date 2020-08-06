@@ -10,7 +10,11 @@ import com.is0git.newsapp.network.models.common.ArticlesItem
 @Dao
 abstract class HeadlineDao {
     @Query("SELECT * from articles_table WHERE articles_table.category == :category AND country == :country LIMIT :limit")
-    abstract fun getHeadlineArticles(limit: Int, category: String? = null, country: String? = null): LiveData<List<ArticlesItem>>
+    abstract fun getHeadlineArticles(
+        limit: Int,
+        category: String? = null,
+        country: String? = null
+    ): LiveData<List<ArticlesItem>>
 
     @Query("DELETE FROM articles_table WHERE articles_table.category == :category AND country == :country")
     abstract suspend fun deleteArticlesByCategory(category: String, country: String? = null)
