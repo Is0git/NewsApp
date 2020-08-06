@@ -59,7 +59,7 @@ suspend inline fun <T> executeNetworkRequest(appContext: Context, action: () -> 
     try {
         val connectivityManager =
             appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val connected = ConnectivityHelper.checkIfConnectedToInternet(connectivityManager)
+        val connected = ConnectivityUtils.checkIfConnectedToInternet(connectivityManager)
         if (!connected) withContext(Dispatchers.Main) {
             Toast.makeText(
                 appContext,

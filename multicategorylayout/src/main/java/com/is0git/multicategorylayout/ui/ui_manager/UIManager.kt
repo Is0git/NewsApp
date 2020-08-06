@@ -96,11 +96,11 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
      * [basedItemPosition] is [CategoryView.views] position.
      */
     fun findCategoryViewById(id: Int): CategoryView? {
-        return categoryViews.find { it.id == id}
+        return categoryViews.find { it.id == id }
     }
 
     fun findPositionById(id: Int): Int? {
-       return findById(id)
+        return findById(id)
     }
 
     private fun findById(id: Int): Int? {
@@ -127,7 +127,10 @@ abstract class UIManager(protected val viewGroup: ViewGroup) {
     abstract fun createViews(dataItem: Category<*>): MutableList<View?>
     abstract fun positionViews(views: List<View?>, position: Int)
     abstract fun defineViewCreators(creatorLoader: ViewCreatorLoader, item: Category<*>)
-    abstract fun createAllCategoryList(id: Int,  mAdapter: ListAdapter<out Any, out RecyclerView.ViewHolder>)
+    abstract fun createAllCategoryList(
+        id: Int,
+        mAdapter: ListAdapter<out Any, out RecyclerView.ViewHolder>
+    )
 }
 
 /**

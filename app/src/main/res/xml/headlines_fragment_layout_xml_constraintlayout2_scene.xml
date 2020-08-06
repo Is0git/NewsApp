@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="1000">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:scaleX="1"
+                android:scaleY="1"
+                android:translationX="0dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/materialTextView" />
+            <KeyAttribute
+                android:alpha="1"
+                android:scaleX="1.4"
+                android:scaleY="1.4"
+                android:translationY="70dp"
+                motion:framePosition="35"
+                motion:motionTarget="@id/materialTextView" />
+            <KeyAttribute
+                android:alpha="0"
+                android:scaleX="0.2"
+                android:scaleY="0.2"
+                android:translationY="70dp"
+                motion:framePosition="60"
+                motion:motionTarget="@id/materialTextView" />
+            <KeyAttribute
+                android:alpha="0"
+                android:scaleX="0.1"
+                android:scaleY="0.1"
+                android:translationY="70dp"
+                motion:framePosition="70"
+                motion:motionTarget="@id/materialTextView" />
+            <KeyAttribute
+                android:alpha="0"
+                android:scaleX="0.1"
+                android:scaleY="0.1"
+                android:translationY="70dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/materialTextView" />
+
+            <KeyAttribute
+                android:translationY="0dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/cosmoView" />
+            <KeyAttribute
+                android:alpha="0.4"
+                android:scaleX="0.05"
+                android:scaleY="0.05"
+                motion:framePosition="60"
+                motion:motionTarget="@id/cosmoView" />
+            <KeyAttribute
+                android:scaleX="0.05"
+                android:scaleY="0.05"
+                android:translationY="180dp"
+                motion:framePosition="100"
+                motion:motionTarget="@id/cosmoView" />
+            <KeyCycle
+                android:rotation="5"
+                motion:framePosition="0"
+                motion:motionTarget="@id/cosmoView"
+                motion:wavePeriod="1" />
+
+            <KeyCycle
+                android:rotation="2"
+                android:translationY="10dp"
+                motion:framePosition="0"
+                motion:motionTarget="@id/materialTextView"
+                motion:wavePeriod="2" />
+
+            <KeyAttribute
+                android:scaleX="0"
+                android:scaleY="0"
+                android:translationY="20dp"
+                motion:framePosition="20"
+                motion:motionTarget="@id/refreshButton" />
+            <KeyAttribute
+                android:scaleX="0"
+                android:scaleY="0"
+                motion:framePosition="100"
+                motion:motionTarget="@id/refreshButton" />
+            <KeyAttribute
+                android:scaleX="0"
+                android:scaleY="0"
+                android:translationY="20dp"
+                motion:framePosition="20"
+                motion:motionTarget="@id/nightModeButton" />
+            <KeyAttribute
+                android:scaleX="0"
+                android:scaleY="0"
+                motion:framePosition="100"
+                motion:motionTarget="@id/nightModeButton" />
+        </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start" />
+
+    <ConstraintSet android:id="@+id/end" />
+</MotionScene>

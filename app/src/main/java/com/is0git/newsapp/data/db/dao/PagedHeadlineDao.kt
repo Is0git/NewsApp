@@ -9,7 +9,10 @@ import com.is0git.newsapp.models.common.ArticlesItem
 @Dao
 abstract class PagedHeadlineDao : HeadlineDao() {
     @Query("SELECT * FROM articles_table WHERE category == :category and country == :country")
-    abstract fun getPagingSource(category: String?, country: String?): PagingSource<Int, ArticlesItem>
+    abstract fun getPagingSource(
+        category: String?,
+        country: String?
+    ): PagingSource<Int, ArticlesItem>
 
     @Delete
     abstract suspend fun deleteByQueryResult(query: List<ArticlesItem>)

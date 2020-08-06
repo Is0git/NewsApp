@@ -6,7 +6,8 @@ import com.is0git.newsapp.data.db.dao.HeadlineDao
 import com.is0git.newsapp.models.common.ArticlesItem
 import javax.inject.Inject
 
-class HeadlineCache @Inject constructor(private val headlineDao: HeadlineDao) : DataCache<ArticlesItem> {
+class HeadlineCache @Inject constructor(private val headlineDao: HeadlineDao) :
+    DataCache<ArticlesItem> {
     override suspend fun cacheData(data: List<ArticlesItem>?) {
         headlineDao.insertHeadlines(data)
     }
@@ -15,7 +16,11 @@ class HeadlineCache @Inject constructor(private val headlineDao: HeadlineDao) : 
         return headlineDao.getHeadlineArticles(10)
     }
 
-    fun getHeadlinesByCategory(limit: Int, category: String, country: String?): LiveData<List<ArticlesItem>> {
+    fun getHeadlinesByCategory(
+        limit: Int,
+        category: String,
+        country: String?
+    ): LiveData<List<ArticlesItem>> {
         return headlineDao.getHeadlineArticles(limit, category, country)
     }
 

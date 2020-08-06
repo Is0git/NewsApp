@@ -3,28 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
-    app:startDestination="@id/topHeadlinesFragment"
+    app:startDestination="@id/navigation_home"
     tools:ignore="UnusedNavigation">
 
     <fragment
-        android:id="@+id/topHeadlinesFragment"
+        android:id="@+id/navigation_about"
+        android:name="com.is0git.newsapp.ui.fragments.about_fragment.AboutFragment"
+        android:label="@string/info"
+        tools:layout="@layout/about_fragment_layout" />
+
+    <fragment
+        android:id="@+id/navigation_home"
         android:name="com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment"
-        android:label="TopHeadlinesFragment" >
+        android:label="@string/home"
+        tools:layout="@layout/headlines_fragment_layout">
         <action
             android:id="@+id/action_topHeadlinesFragment_to_categoryViewAllFragment"
             app:destination="@id/categoryViewAllFragment"
-            app:popUpTo="@id/topHeadlinesFragment" />
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/navigation_home" />
+        <action
+            android:id="@+id/action_topHeadlinesFragment_to_fullNewsFragment"
+            app:destination="@id/fullNewsFragment"
+            app:enterAnim="@anim/main_enter_anim"
+            app:exitAnim="@anim/main_exit_anim"
+            app:popEnterAnim="@anim/main_pop_enter_anim"
+            app:popExitAnim="@anim/mian_pop_exit_anim" />
     </fragment>
-    <fragment
-        android:id="@+id/sourcesFragment"
-        android:name="com.is0git.newsapp.ui.fragments.sources.SourcesFragment"
-        android:label="SourcesFragment" />
     <fragment
         android:id="@+id/categoryViewAllFragment"
         android:name="com.is0git.newsapp.ui.fragments.view_all_fragment.HeadlineViewAllFragment"
-        android:label="CategoryViewAllFragment" >
+        android:label="CategoryViewAllFragment">
         <argument
             android:name="categoryType"
             app:argType="string" />
+        <action
+            android:id="@+id/action_categoryViewAllFragment_to_fullNewsFragment"
+            app:destination="@id/fullNewsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/fullNewsFragment"
+        android:name="com.is0git.newsapp.ui.fragments.full_news_fragment.FullNewsFragment"
+        android:label="FullNewsFragment">
+        <argument
+            android:name="article"
+            app:argType="com.is0git.newsapp.network.models.common.ArticlesItem" />
     </fragment>
 </navigation>

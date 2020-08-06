@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.transform
@@ -25,6 +26,17 @@ class CosmoPlanetView : View {
     private var atmosphereBlurRadius = 15f
     private var isShadowShown = true
     private lateinit var shadowPaint: Paint
+    private var atmosphereColors = IntArray(3).apply {
+        this[0] = Color.WHITE
+        this[1] = Color.parseColor("#4480bf")
+        this[2] = Color.TRANSPARENT
+    }
+    var atmosphereRotation = 0f
+        set(value) {
+            field = value
+            invalidate()
+        }
+
 
     constructor(context: Context?) : super(context) {
         init()
@@ -90,20 +102,8 @@ class CosmoPlanetView : View {
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         // atmosphere shader
-        val atmosphereColors = IntArray(3)
-        atmosphereColors[0] = Color.WHITE
-        atmosphereColors[1] = Color.parseColor("#4480bf")
-        atmosphereColors[2] = Color.TRANSPARENT
-        planetAtmospherePaint.shader = LinearGradient(
-            w.toFloat(),
-            0f,
-            w.toFloat() * 0.5f,
-            h.toFloat(),
-            atmosphereColors,
-            null,
-            Shader.TileMode.CLAMP
-        )
         // planet shader
+        planetAtmospherePaint.shader = setAtmosphereGradient(w, h, atmosphereRotation)
         val map = BitmapFactory.decodeResource(resources, R.drawable.test2)
         val bitMapShader = BitmapShader(map, Shader.TileMode.REPEAT, Shader.TileMode.CLAMP)
         val planetAmbianceShader = LinearGradient(
@@ -119,7 +119,7 @@ class CosmoPlanetView : View {
             ComposeShader(bitMapShader, planetAmbianceShader, PorterDuff.Mode.LIGHTEN)
         planetCirclePaint.shader = composeShader
         planetCirclePaint.shader.transform {
-            this.setTranslate(300f, -600f)
+            this.setTranslate(300f, 0f)
             this.setScale(0.4f, 0.4f)
         }
         // shadow
@@ -128,7 +128,7 @@ class CosmoPlanetView : View {
             height.toFloat() * 0.6f,
             width.toFloat(),
             0f,
-            Color.BLACK,
+            ResourcesCompat.getColor(resources, R.color.colorBackground, null),
             Color.TRANSPARENT,
             Shader.TileMode.CLAMP
         )
@@ -140,10 +140,25 @@ class CosmoPlanetView : View {
         }
     }
 
+    private fun setAtmosphereGradient(w: Int, h: Int, multiplier: Float): LinearGradient {
+        return LinearGradient(
+            w.toFloat(),
+            0f,
+            w.toFloat() * 0.5f + (0.5f * multiplier),
+            h.toFloat() - (1 * multiplier),
+            atmosphereColors,
+            null,
+            Shader.TileMode.CLAMP
+        )
+    }
+
     private fun drawPlanet(canvas: Canvas) {
         val middle = width.toFloat() / 2f
         val path = Path()
-        path.addCircle(middle, middle, planetRadius, Path.Direction.CW)
+        path.addCircle(middle, middle, planetRadius - 50, Path.Direction.CW)
+        if (atmosphereRotation > 0f) planetAtmospherePaint.shader =
+            setAtmosphereGradient(width, height, atmosphereRotation)
+        Log.d("CANVAS", " ${atmosphereRotation}")
         canvas.drawPath(path, planetCirclePaint)
         canvas.drawPath(path, planetAtmospherePaint)
         if (isShadowShown) {

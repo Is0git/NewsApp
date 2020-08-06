@@ -5,12 +5,12 @@ import com.squareup.moshi.Json
 
 data class TopHeadlines(
 
-    @Json(name="totalResults")
-	val totalResults: Int? = null,
+    @Json(name = "totalResults")
+    val totalResults: Int? = null,
 
-    @Json(name="articles")
-	val articles: List<ArticlesItem>? = null,
+    @Json(name = "articles")
+    val articles: List<ArticlesItem>? = null,
 
-    @Json(name="status")
-	val status: String? = null
+    @Json(name = "status")
+    val status: String? = null
 )

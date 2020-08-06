@@ -2,6 +2,9 @@ package com.is0git.multicategorylayout.ui.view_creators
 
 import android.content.Context
 import android.graphics.Typeface
+import android.os.Build
+import android.text.TextUtils
+import android.util.TypedValue
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -10,7 +13,6 @@ import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.TypefaceCompat
 import androidx.core.view.ViewCompat
-import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -28,11 +30,21 @@ object CategoryUIFactory {
     fun createTitleTextView(context: Context, title: String): TextView {
         return MaterialTextView(context).apply {
             text = title
-            TextViewCompat.setTextAppearance(
-                this,
-                R.style.TextAppearance_MaterialComponents_Headline5
+            setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                resources.getDimension(R.dimen.material_text_headline4)
             )
-            setTextColor(ResourcesCompat.getColor(resources, R.color.colorOnSurface, null))
+            setSingleLine()
+            ellipsize = TextUtils.TruncateAt.END
+            typeface = TypefaceCompat.create(
+                context,
+                ResourcesCompat.getFont(context, R.font.playfairbold),
+                Typeface.BOLD
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                transitionName = "categoryNameTransition"
+            }
+//            setTextColor(ResourcesCompat.getColor(resources, , null))
         }
     }
 
@@ -60,6 +72,7 @@ object CategoryUIFactory {
             }
             layoutManager = mLayoutManager
             this.adapter = adapter
+            itemAnimator = null
             id = ViewCompat.generateViewId()
             isNestedScrollingEnabled = false
         }
@@ -71,4 +84,15 @@ object CategoryUIFactory {
             id = ViewCompat.generateViewId()
         }
     }
+
+    fun getSpan(width: Float = 210f, context: Context): Int {
+        return 2.coerceAtLeast(
+            context.resources.displayMetrics.widthPixels / ScreenUnitUtils.convertDpToPixel(
+                width,
+                context
+            ).toInt()
+        )
+    }
 }
+
+

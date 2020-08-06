@@ -1,30 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:elevation="0dp">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/categoryName"
+            <com.is0git.newsapp.ui.views.view_all_custom_motion.ViewAllCustomMotion
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="24dp"
-                android:text="BUSINESS"
-                android:textAppearance="@style/ViewAll.Title" />
+                app:layoutDescription="@xml/view_all_fagment_layout_xml_constraintlayout2_scene"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/categoryName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="BUSINESS"
+                    android:textAppearance="@style/ViewAll.Title"
+                    android:transitionName="categoryNameTransition"
+                    app:layout_constraintEnd_toStartOf="@id/refreshButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:textAllCaps="false"
+                    tools:targetApi="lollipop" />
+
+                <ImageButton
+                    android:id="@+id/refreshButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginRight="24dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_refresh"
+                    app:layout_constraintBottom_toBottomOf="@id/categoryName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/categoryName"
+                    app:tint="@color/colorPrimary" />
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/categoryName"
+                    app:layout_constraintTop_toBottomOf="@id/categoryName" />
+
+            </com.is0git.newsapp.ui.views.view_all_custom_motion.ViewAllCustomMotion>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categoryList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/loadProgressBar"
+            style="@style/SpinKitView.Wave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:background="@color/colorSurface"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp" />
+
+
+        <ImageView
+            android:id="@+id/emptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="40dp"
+            android:src="@drawable/ic_empty"
+            android:visibility="invisible"
+            app:tint="@color/colorPrimary" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/emptyText"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="75dp"
+            android:layout_marginEnd="18dp"
+            android:gravity="center"
+            android:text="@string/no_items_u_1f60"
+            android:visibility="invisible" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

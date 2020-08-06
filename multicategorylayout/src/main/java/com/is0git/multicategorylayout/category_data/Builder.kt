@@ -1,6 +1,7 @@
 package com.is0git.multicategorylayout.category_data
 
 
+import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
@@ -24,7 +25,7 @@ open class Category<T>(
     @StyleRes var buttonStyleRes: Int?,
     var hasDivider: Boolean,
     @ColorRes var dividerColor: Int,
-    var onViewAllButtonClickListener: ((category: Category<*>) -> Unit)? = null
+    var onViewAllButtonClickListener: ((category: Category<*>, view: View?) -> Unit)? = null
 ) {
     companion object {
         const val FLAG_NONE = 0
@@ -40,21 +41,25 @@ open class Category<T>(
         private var flags: Int = FLAG_NONE
         private var isExpendable = true
         private var categoryData: MutableList<T> = mutableListOf()
+
         @AttrRes
         private var textAppearanceId: Int? = null
+
         @StyleRes
         private var buttonStyleId: Int? = null
         private var hasDivider = false
+
         @ColorRes
         private var dividerColorRes: Int = com.is0git.multicategorylayout.R.color.colorPrimary
-        private var onViewAllButtonClickListener: ((category: Category<*>) -> Unit)? = null
+        private var onViewAllButtonClickListener: ((category: Category<*>, view: View?) -> Unit)? =
+            null
 
         fun setTitle(title: String?): Builder<T> {
             this.title = title
             return this
         }
 
-        fun enabledViewAll(onViewAllClickListener: ((category: Category<*>) -> Unit)?): Builder<T> {
+        fun enabledViewAll(onViewAllClickListener: ((category: Category<*>, view: View?) -> Unit)?): Builder<T> {
             this.onViewAllButtonClickListener = onViewAllClickListener
             isViewAllEnabled = true
             return this

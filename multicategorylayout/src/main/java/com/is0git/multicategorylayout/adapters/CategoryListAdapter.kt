@@ -10,6 +10,7 @@ class CategoryListAdapter<T, VH : RecyclerView.ViewHolder>(
     val bind: (holder: VH, item: T, position: Int) -> Unit,
     val createVH: (parent: ViewGroup, viewType: Int) -> VH
 ) : ListAdapter<T, VH>(diffCallback) {
+
     override fun onBindViewHolder(holder: VH, position: Int) {
         bind(holder, getItem(position), position)
     }

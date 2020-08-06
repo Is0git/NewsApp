@@ -4,6 +4,7 @@ import android.os.Build
 import android.transition.Fade
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.*
 import androidx.core.view.updateLayoutParams
@@ -45,8 +46,12 @@ class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
                     .apply {
                         topToTop = PARENT_ID
                         bottomToBottom = PARENT_ID
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            marginEnd = ScreenUnitUtils.convertDpToPixel(16f, context).toInt()
+                        }
                     }
-            layoutManager = GridLayoutManager(context, 3)
+            val spanCount = CategoryUIFactory.getSpan(210f, context)
+            layoutManager = GridLayoutManager(context, spanCount)
             adapter = mAdapter
         }
         allList = recyclerView
@@ -55,11 +60,11 @@ class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
     }
 
     private fun createAnimators(list: RecyclerView) {
-            categoryTransitionManager = CategoryTransitionManager(viewGroup, Fade())
-            val allListAnimator = AllListAnimator(list)
-            val categoriesAnimator = CategoriesAnimator(viewGroup, list.id)
-            categoryTransitionManager.addAnimator(allListAnimator)
-            categoryTransitionManager.addAnimator(categoriesAnimator)
+        categoryTransitionManager = CategoryTransitionManager(viewGroup, Fade())
+        val allListAnimator = AllListAnimator(list)
+        val categoriesAnimator = CategoriesAnimator(viewGroup, list.id)
+        categoryTransitionManager.addAnimator(allListAnimator)
+        categoryTransitionManager.addAnimator(categoriesAnimator)
     }
 
     override fun createViews(dataItem: Category<*>): MutableList<View?> {
@@ -68,9 +73,13 @@ class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
             val view = v?.createView()
             views.add(view)
         }
+        views[1]?.setOnClickListener {
+            dataItem.onViewAllButtonClickListener?.invoke(dataItem, views[0])
+        }
         return views
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun positionViews(views: List<View?>, position: Int) {
         views[0]?.layoutParams = ConstraintLayout.LayoutParams(
             MATCH_CONSTRAINT,
@@ -85,13 +94,15 @@ class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
                     topToBottom = lastChild.id
                 }
             }
+            val margin = ScreenUnitUtils.convertDpToPixel(30f, getContext()).toInt()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                marginStart = ScreenUnitUtils.convertDpToPixel(30f, getContext()).toInt()
+                marginStart = margin
             } else {
-                leftMargin = ScreenUnitUtils.convertDpToPixel(30f, getContext()).toInt()
+                leftMargin = margin
             }
-            topMargin = ScreenUnitUtils.convertDpToPixel(35f, getContext()).toInt()
+            topMargin = margin
             startToStart = PARENT_ID
+            marginEnd = ScreenUnitUtils.convertDpToPixel(4f, getContext()).toInt()
             endToStart = views[1]!!.id
         }
         views[1]?.layoutParams = ConstraintLayout.LayoutParams(

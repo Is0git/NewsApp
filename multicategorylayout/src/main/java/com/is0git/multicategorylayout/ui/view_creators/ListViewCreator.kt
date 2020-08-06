@@ -4,7 +4,8 @@ import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.ListAdapter
 
-class ListViewCreator(context: Context, val flags: Int, var adapter: ListAdapter<*, *>) : ViewCreator(context) {
+class ListViewCreator(context: Context, val flags: Int, var adapter: ListAdapter<*, *>) :
+    ViewCreator(context) {
     override fun createView(): View {
         return CategoryUIFactory.createRecyclerView(context, flags, adapter)
     }

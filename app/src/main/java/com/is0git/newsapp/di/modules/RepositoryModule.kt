@@ -1,7 +1,7 @@
 package com.is0git.newsapp.di.modules
 
-import com.is0git.newsapp.vm.single_job_viewmodel.DefaultSingleJobRepository
-import com.is0git.newsapp.vm.single_job_viewmodel.SingleJobRepository
+import com.is0git.newsapp.vm.single_job.DefaultSingleJobRepository
+import com.is0git.newsapp.vm.single_job.SingleJobRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
