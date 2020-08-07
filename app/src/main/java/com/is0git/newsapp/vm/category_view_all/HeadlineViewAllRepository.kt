@@ -48,7 +48,7 @@ class HeadlineViewAllRepository @Inject constructor(
         country: String
     ): Flow<PagingData<UiModel>> {
         return Pager(
-            config = PagingConfig(DEFAULT_PAGE_SIZE)
+            config = PagingConfig(DEFAULT_PAGE_SIZE, enablePlaceholders = true)
         ) {
             ViewAllPagingSource(context, service, category, country)
         }.flow.map { pagingData -> pagingData.map { UiModel.Data(it) } }

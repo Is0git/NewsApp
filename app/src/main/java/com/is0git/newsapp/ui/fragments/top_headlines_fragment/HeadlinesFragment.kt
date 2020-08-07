@@ -58,13 +58,15 @@ class HeadlinesFragment :
     private val topHeadLinesViewModel: TopHeadLinesViewModel by this.navGraphViewModels(R.id.main_nav) { defaultViewModelProviderFactory }
     lateinit var allListAdapter: CategoryListAdapter<ArticlesItem, VerticalListViewHolder>
     lateinit var behavior: BottomSheetBehavior<View>
+
     @Inject
     lateinit var sharedPreferences: SharedPreferences
+
     @Inject
     lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        restoreViewStates()
+        restoreFilter()
         setupBottomSheet()
         super.onViewCreated(view, savedInstanceState)
         buildCategoryLayout()
@@ -90,11 +92,12 @@ class HeadlinesFragment :
                 is JobState.JobStarted -> {
                     showProgress()
                 }
-                is JobState.JobFailed -> Log.d("jobState", "failed: ${it.throwable}")
+                is JobState.JobFailed -> Log.d(HEADLINE_FRAGMENT_TAG, "job failed: ${it.throwable}")
                 is JobState.JobCompleted -> {
                     hideProgress()
                     topHeadLinesViewModel.repo.onJobIdle()
                 }
+                else -> Log.i(HEADLINE_FRAGMENT_TAG, "job state is idle")
             }
         }
         topHeadLinesViewModel.bottomSheetStateLiveData.observe(viewLifecycleOwner) {
@@ -126,21 +129,14 @@ class HeadlinesFragment :
         }
     }
 
-    private fun restoreViewStates() {
-        topHeadLinesViewModel.savedStateHandle.apply {
-            val position = get<Int>(TAB_POSITION)
-            if (position != null) {
-                binding.categoryLayout.post {
-                    binding.categoryLayout.selectTabByPosition(position)
-                }
-            }
-            val selectedCountryChipKey = get<Int>(COUNTRY_CHIP_POSITION)
-            if (selectedCountryChipKey != null) {
-                binding.filterCard.selectChip(
-                    getString(R.string.country_filter_title),
-                    selectedCountryChipKey
-                )
-            }
+    private fun restoreFilter() {
+        val selectedCountryChipKey =
+            topHeadLinesViewModel.savedStateHandle.get<Int>(COUNTRY_CHIP_POSITION)
+        if (selectedCountryChipKey != null) {
+            binding.filterCard.selectChip(
+                getString(R.string.country_filter_title),
+                selectedCountryChipKey
+            )
         }
     }
 
@@ -155,7 +151,6 @@ class HeadlinesFragment :
     }
 
     private fun buildCategoryLayout() {
-        val businessAdapter = createVerticalPositionAdapter()
         binding.categoryLayout.apply {
             val businessCategory = createHeadlineFragmentCategory(
                 CATEGORY_BUSINESS,
@@ -210,7 +205,7 @@ class HeadlinesFragment :
                 topHeadLinesViewModel.savedStateHandle.set(TAB_POSITION, position)
             }
         }
-
+        hideProgress()
     }
 
     private fun setActions() {
@@ -295,6 +290,22 @@ class HeadlinesFragment :
 
     private fun startBrowseIntent(articlesItem: ArticlesItem) {
         requireActivity().startBrowserCheckedConnection(articlesItem)
+    }
+
+    private fun restoreViews() {
+        topHeadLinesViewModel.savedStateHandle.apply {
+            val position = get<Int>(TAB_POSITION)
+            if (position != null) {
+                binding.categoryLayout.post {
+                    binding.categoryLayout.selectTabByPosition(position)
+                }
+            }
+        }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        restoreViews()
     }
 
     private fun onViewAllClick(category: Category<*>, transitionView: View?) {
@@ -385,5 +396,6 @@ class HeadlinesFragment :
             else Toast.makeText(this, this.getString(R.string.no_browser), Toast.LENGTH_SHORT)
                 .show()
         }
+        const val HEADLINE_FRAGMENT_TAG = "HeadlineFragmentTag"
     }
 }

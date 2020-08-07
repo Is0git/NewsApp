@@ -141,7 +141,7 @@
             android:background="@color/colorBackground"
             android:clickable="true"
             android:focusable="true"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/progressBar"
@@ -149,7 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:SpinKit_Color="@color/colorPrimary" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

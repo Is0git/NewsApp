@@ -21,6 +21,7 @@ abstract class TabLayoutManager(
     var isAllEnabled = false
     private var tabUpdateListener: ((TabLayout.Tab, Category<*>) -> Boolean)? = null
     private var onTabSelectedListener: ((TabLayout.Tab, key: String) -> Unit)? = null
+    var isAllTabSelected = false
     private var updateTabLayoutJob: Job? = null
     var onTabSelect: ((tab: TabLayout.Tab?, position: Int) -> Unit)? = null
 

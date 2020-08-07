@@ -1,8 +1,8 @@
 package com.is0git.newsapp.paging
 
+import android.accounts.NetworkErrorException
 import android.content.Context
 import androidx.paging.PagingSource
-import com.is0git.newsapp.R
 import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.network.services.NewsHeadlinesService
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,14 +25,11 @@ class ViewAllPagingSource @Inject constructor(
             if (response.body() == null) {
                 return LoadResult.Error(Throwable("network error: ${response.message()}"))
             }
-            if (response.body()!!.articles.isNullOrEmpty()) return LoadResult.Error(
-                IllegalStateException(context.getString(R.string.list_is_empty))
-            )
             return LoadResult.Page(response.body()!!.articles!!, null, pageNumber + 1)
         } catch (ex: IOException) {
             return LoadResult.Error(Throwable("no internet? Pagination is not cached ;) $ex"))
         }
-        catch (ex: Exception) {
+        catch (ex: NetworkErrorException) {
             return LoadResult.Error(Throwable("network error $ex"))
         }
     }

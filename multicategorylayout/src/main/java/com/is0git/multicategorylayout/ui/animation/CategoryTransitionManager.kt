@@ -23,6 +23,9 @@ class CategoryTransitionManager(var viewGroup: ViewGroup, var transtion: Transit
     }
 
     fun hide() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            TransitionManager.beginDelayedTransition(viewGroup, transtion)
+        }
         hideWithoutAnim()
     }
 

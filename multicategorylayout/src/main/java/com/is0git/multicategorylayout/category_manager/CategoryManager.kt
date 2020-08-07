@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.LifecycleOwner
@@ -101,10 +102,22 @@ class CategoryManager(
 
     @Suppress("unchecked_cast")
     override fun updateCategoryAdapter(categoryId: String, list: List<*>) {
-        val category = categories.find { it.id == categoryId }
-        if (category == null) return
+        val position = categories.getCategoryPositionById(categoryId)
+        if (position == null) return
         else {
-            category.adapter.submitList(list as List<Nothing>)
+            val category = categories[position]
+            val categoryView = uiManager.categoryViews[position]
+            val visibility = if (list.isEmpty()) {
+                View.INVISIBLE
+            } else {
+                category.adapter.submitList(list as List<Nothing>)
+                View.VISIBLE
+            }
+            if (tabLayoutManager != null && !tabLayoutManager!!.isAllEnabled) {
+                for (v in categoryView.views) {
+                    v.visibility = visibility
+                }
+            }
         }
     }
 
@@ -181,7 +194,8 @@ class CategoryManager(
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    tabLayoutManager?.onTabSelect?.invoke(tab, tabLayout.selectedTabPosition)
+                    tabLayoutManager?.isAllEnabled = tab?.text == getContext().getString(R.string.all)
+                    tabLayoutManager!!.onTabSelect?.invoke(tab, tabLayout.selectedTabPosition)
                 }
 
             })
@@ -315,3 +329,11 @@ infix fun List<Category<*>>.getCategoryPosition(category: Category<*>): Int? {
     }
     return null
 }
+
+infix fun List<Category<*>>.getCategoryPositionById(categoryId: String): Int? {
+    this.forEachIndexed { index, c ->
+        if (c.id == categoryId) return index
+    }
+    return null
+}
+

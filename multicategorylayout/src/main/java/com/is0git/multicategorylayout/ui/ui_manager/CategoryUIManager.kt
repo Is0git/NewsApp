@@ -71,6 +71,7 @@ class CategoryUIManager(viewGroup: ViewGroup) : UIManager(viewGroup) {
         val views = mutableListOf<View?>()
         for (v in getViewCreators()) {
             val view = v?.createView()
+            view?.visibility = View.INVISIBLE
             views.add(view)
         }
         views[1]?.setOnClickListener {

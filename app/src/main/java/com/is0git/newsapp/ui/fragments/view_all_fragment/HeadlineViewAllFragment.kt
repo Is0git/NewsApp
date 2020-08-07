@@ -7,7 +7,6 @@ import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +17,7 @@ import androidx.paging.LoadState
 import com.is0git.newsapp.R
 import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.ui.adapters.AllHeadlinesAdapter
+import com.is0git.newsapp.ui.adapters.AllListLoadStateAdapter
 import com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment.Companion.startBrowserCheckedConnection
 import com.is0git.newsapp.vm.category_view_all.HeadlineViewAllViewModel
 import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel
@@ -38,6 +38,8 @@ class HeadlineViewAllFragment : ViewAllFragment() {
 
     @Inject
     lateinit var allHeadlinesAdapter: AllHeadlinesAdapter
+    @Inject
+    lateinit var allLoadStateAdapter: AllListLoadStateAdapter
     private var pagerJob: Job? = null
 
     override fun onCreateView(
@@ -51,12 +53,16 @@ class HeadlineViewAllFragment : ViewAllFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.categoryName.transitionName = "categoryNameTransition"
-        binding.categoryList.adapter = allHeadlinesAdapter
+        binding.categoryList.adapter = allHeadlinesAdapter.withLoadStateFooter(allLoadStateAdapter)
         super.onViewCreated(view, savedInstanceState)
         initArticlesDataStream(args.categoryType, headlinesViewModel.countryLiveData.value!!)
         setActions()
         allHeadlinesAdapter.onClickListener = ::onArticleItemClick
         allHeadlinesAdapter.onLinkButtonClick = ::startBrowseIntent
+        binding.swipeLayout.setOnRefreshListener {
+            allHeadlinesAdapter.refresh()
+            binding.swipeLayout.isRefreshing = false
+        }
     }
 
     override fun observeData() {
@@ -75,11 +81,11 @@ class HeadlineViewAllFragment : ViewAllFragment() {
                     ?: it.append as? LoadState.Error
                     ?: it.prepend as? LoadState.Error
                 errorState?.let {
-                    Toast.makeText(
-                        requireContext(),
-                        "\uD83D\uDE28 Wooops ${it.error.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "\uD83D\uDE28 Wooops ${it.error.message}",
+//                        Toast.LENGTH_LONG
+//                    ).show()
                 }
             }
         }
