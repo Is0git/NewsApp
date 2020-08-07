@@ -58,14 +58,13 @@ class HeadlinesFragment :
     private val topHeadLinesViewModel: TopHeadLinesViewModel by this.navGraphViewModels(R.id.main_nav) { defaultViewModelProviderFactory }
     lateinit var allListAdapter: CategoryListAdapter<ArticlesItem, VerticalListViewHolder>
     lateinit var behavior: BottomSheetBehavior<View>
-
     @Inject
     lateinit var sharedPreferences: SharedPreferences
-
     @Inject
     lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        restoreViewStates()
         setupBottomSheet()
         super.onViewCreated(view, savedInstanceState)
         buildCategoryLayout()
@@ -84,7 +83,7 @@ class HeadlinesFragment :
             allListAdapter.submitList(it)
             requireView().postDelayed({
                 binding.categoryLayout.getAllList()?.smoothScrollToPosition(0)
-            }, 2000)
+            }, 1000)
         }
         topHeadLinesViewModel.jobStatesLiveData.observe(viewLifecycleOwner) {
             when (it) {
@@ -93,10 +92,8 @@ class HeadlinesFragment :
                 }
                 is JobState.JobFailed -> Log.d("jobState", "failed: ${it.throwable}")
                 is JobState.JobCompleted -> {
-                    binding.root.postDelayed({
-                        hideProgress()
-                        topHeadLinesViewModel.repo.onJobIdle()
-                    }, 2000)
+                    hideProgress()
+                    topHeadLinesViewModel.repo.onJobIdle()
                 }
             }
         }
@@ -129,8 +126,7 @@ class HeadlinesFragment :
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private fun restoreViewStates() {
         topHeadLinesViewModel.savedStateHandle.apply {
             val position = get<Int>(TAB_POSITION)
             if (position != null) {
@@ -283,7 +279,6 @@ class HeadlinesFragment :
                     COUNTRY_CHIP_POSITION,
                     position
                 )
-                Log.d("CHECKS", "CHECKED")
                 initNewCategoriesData(chip.text.toString())
             }
         }
@@ -299,7 +294,7 @@ class HeadlinesFragment :
     }
 
     private fun startBrowseIntent(articlesItem: ArticlesItem) {
-        requireActivity().startArticleBrowseIntentWithConnectionCheck(articlesItem)
+        requireActivity().startBrowserCheckedConnection(articlesItem)
     }
 
     private fun onViewAllClick(category: Category<*>, transitionView: View?) {
@@ -382,7 +377,7 @@ class HeadlinesFragment :
             CATEGORY_TECHNOLOGY
         )
 
-        fun Activity.startArticleBrowseIntentWithConnectionCheck(articlesItem: ArticlesItem) {
+        fun Activity.startBrowserCheckedConnection(articlesItem: ArticlesItem) {
             val connection = showConnectionSnackBar()
             if (!connection) return
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(articlesItem.url))

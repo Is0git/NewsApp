@@ -7,8 +7,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 sealed class UiModel {
-    class Data(val articlesItem: ArticlesItem) : UiModel(), Comparator<ArticlesItem> {
-        override fun compare(o1: ArticlesItem?, o2: ArticlesItem?): Int {
+    class Data(val articlesItem: ArticlesItem) : UiModel() {
+        fun compare(o1: ArticlesItem?, o2: ArticlesItem?, diffTime: Int = ONE_DAY): Int {
             val simpleDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
             val date = simpleDateFormat.getDate(o1)
             val date2 = simpleDateFormat.getDate(o2)
@@ -27,17 +27,18 @@ sealed class UiModel {
         }
 
         companion object {
-            const val ONE_DAY = 8640000
+            const val ONE_DAY = 86400000
 
             val UI_MODEL_SEPARATOR = object : DiffUtil.ItemCallback<UiModel>() {
                 override fun areItemsTheSame(oldItem: UiModel, newItem: UiModel): Boolean {
-                    return if (oldItem is Data) return oldItem.articlesItem.url == (newItem as Data).articlesItem.url
-                    else true
+                    return (oldItem is Data && newItem is Data &&
+                            oldItem.articlesItem.url == newItem.articlesItem.url) ||
+                            (oldItem is Separator && newItem is Separator &&
+                                    oldItem.description == newItem.description)
                 }
 
                 override fun areContentsTheSame(oldItem: UiModel, newItem: UiModel): Boolean {
-                    return if (oldItem is Data) oldItem.articlesItem == (newItem as Data).articlesItem
-                    else true
+                    return oldItem == newItem
                 }
             }
         }

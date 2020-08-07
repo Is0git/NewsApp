@@ -11,7 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.is0git.newsapp.R
 import com.is0git.newsapp.databinding.FullNewsFragmentLayoutBinding
 import com.is0git.newsapp.ui.fragments.BaseFragment
-import com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment.Companion.startArticleBrowseIntentWithConnectionCheck
+import com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment.Companion.startBrowserCheckedConnection
 import com.is0git.newsapp.utils.DateUtils
 import com.is0git.newsapp.utils.args.ArgsResolver
 import com.is0git.newsapp.utils.loadImageWith
@@ -56,7 +56,7 @@ class FullNewsFragment :
                 }
             }
             readMoreButton.setOnClickListener {
-                requireActivity().startArticleBrowseIntentWithConnectionCheck(args.article)
+                requireActivity().startBrowserCheckedConnection(args.article)
             }
         }
     }

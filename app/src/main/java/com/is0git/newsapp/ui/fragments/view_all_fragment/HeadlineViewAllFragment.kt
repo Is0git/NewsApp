@@ -18,7 +18,7 @@ import androidx.paging.LoadState
 import com.is0git.newsapp.R
 import com.is0git.newsapp.models.common.ArticlesItem
 import com.is0git.newsapp.ui.adapters.AllHeadlinesAdapter
-import com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment.Companion.startArticleBrowseIntentWithConnectionCheck
+import com.is0git.newsapp.ui.fragments.top_headlines_fragment.HeadlinesFragment.Companion.startBrowserCheckedConnection
 import com.is0git.newsapp.vm.category_view_all.HeadlineViewAllViewModel
 import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,7 +86,7 @@ class HeadlineViewAllFragment : ViewAllFragment() {
     }
 
     private fun startBrowseIntent(articlesItem: ArticlesItem) {
-        requireActivity().startArticleBrowseIntentWithConnectionCheck(articlesItem)
+        requireActivity().startBrowserCheckedConnection(articlesItem)
     }
 
     private fun setActions() {
