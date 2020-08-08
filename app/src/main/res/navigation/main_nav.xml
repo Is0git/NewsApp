@@ -55,4 +55,8 @@
             android:name="article"
             app:argType="com.is0git.newsapp.models.common.ArticlesItem" />
     </fragment>
+    <fragment
+        android:id="@+id/testFragment"
+        android:name="com.is0git.newsapp.ui.fragments.TestFragment"
+        android:label="TestFragment" />
 </navigation>

@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.transform
 import com.is0git.cosmoplanetview.R
+
+const val COSMO_PLANET_VIEW_TAG = "CosmoPlanetViewTag"
 
 class CosmoPlanetView : View {
     private lateinit var planetCirclePaint: Paint
@@ -23,11 +25,11 @@ class CosmoPlanetView : View {
             field = value
         }
     private var planetDiameter = 0f
-    private var atmosphereBlurRadius = 15f
+    private var atmosphereBlurRadius = 30f
     private var isShadowShown = true
     private lateinit var shadowPaint: Paint
     private var atmosphereColors = IntArray(3).apply {
-        this[0] = Color.WHITE
+        this[0] =  Color.parseColor("#a7ddf5")
         this[1] = Color.parseColor("#4480bf")
         this[2] = Color.TRANSPARENT
     }
@@ -36,7 +38,22 @@ class CosmoPlanetView : View {
             field = value
             invalidate()
         }
+    var spinX = 0f
+    var spinY = 0f
+    private var skinHeight: Int = 0
+    private var skinWidth: Int = 0
+    private lateinit var composeShader: Shader
+    private lateinit var planetAmbiancePaint: Paint
+    private lateinit var planetSkinPaint: Paint
+    private lateinit var sunReflectionPaint: Paint
+    private lateinit var planetBitmap: Bitmap
 
+    private var sunReflectionColors = IntArray(3).apply {
+        this[0] =  Color.parseColor("#b9e9ff")
+        this[1] = Color.parseColor("#4480bf")
+
+        this[2] = Color.BLACK
+    }
 
     constructor(context: Context?) : super(context) {
         init()
@@ -77,7 +94,12 @@ class CosmoPlanetView : View {
                 typedArray?.recycle()
             }
             atmosphereColor = ResourcesCompat.getColor(resources, atmosphereColorId, null)
+            planetAmbiancePaint = Paint()
             planetCirclePaint = Paint()
+            planetSkinPaint = Paint()
+            sunReflectionPaint = Paint().apply {
+                strokeWidth = 8f
+            }
             planetAtmospherePaint = Paint().apply {
                 style = Paint.Style.STROKE
                 strokeWidth = atmosphereWidth
@@ -103,31 +125,26 @@ class CosmoPlanetView : View {
         super.onSizeChanged(w, h, oldw, oldh)
         // atmosphere shader
         // planet shader
-        planetAtmospherePaint.shader = setAtmosphereGradient(w, h, atmosphereRotation)
-        val map = BitmapFactory.decodeResource(resources, R.drawable.test2)
-        val bitMapShader = BitmapShader(map, Shader.TileMode.REPEAT, Shader.TileMode.CLAMP)
-        val planetAmbianceShader = LinearGradient(
-            w.toFloat(),
-            0f,
-            w.toFloat() * atmosphereAmbianceRatio,
-            h.toFloat() * atmosphereAmbianceRatio,
-            Color.parseColor("#4480bf"),
-            Color.BLACK,
-            Shader.TileMode.CLAMP
-        )
-        val composeShader =
-            ComposeShader(bitMapShader, planetAmbianceShader, PorterDuff.Mode.LIGHTEN)
-        planetCirclePaint.shader = composeShader
-        planetCirclePaint.shader.transform {
-            this.setTranslate(300f, 0f)
-            this.setScale(0.4f, 0.4f)
+        planetAtmospherePaint.shader =
+            setAtmosphereGradient(w, h, atmosphereRotation, atmosphereColors)
+        setPlanetSkin(planetSkinPaint, R.drawable.yaya)
+        setAmbianceShader(planetAmbiancePaint, w.toFloat(), h.toFloat())
+//        composeShader =
+//            ComposeShader(bitMapShader, planetAmbianceShader, PorterDuff.Mode.SCREEN)
+//        planetCirclePaint.shader = composeShader
+        sunReflectionPaint.shader = setAtmosphereGradient(w, h, atmosphereRotation, sunReflectionColors)
+        sunReflectionPaint.apply {
+            style = Paint.Style.STROKE
+            strokeWidth = 5f
+            maskFilter = BlurMaskFilter(8f, BlurMaskFilter.Blur.NORMAL)
         }
+        setSpin(-0.6f, 0.8f)
         // shadow
         shadowPaint.shader = LinearGradient(
             width * 0.3f,
             height.toFloat() * 0.6f,
-            width.toFloat(),
-            0f,
+            width.toFloat() * 0.8f,
+            height - (height * 0.8f),
             ResourcesCompat.getColor(resources, R.color.colorBackground, null),
             Color.TRANSPARENT,
             Shader.TileMode.CLAMP
@@ -140,13 +157,57 @@ class CosmoPlanetView : View {
         }
     }
 
-    private fun setAtmosphereGradient(w: Int, h: Int, multiplier: Float): LinearGradient {
+    private fun setAmbianceShader(paint: Paint, w: Float, h: Float) {
+        paint.shader = LinearGradient(
+            w,
+            0f,
+            w * atmosphereAmbianceRatio,
+            h * atmosphereAmbianceRatio,
+            Color.parseColor("#4480bf"),
+            Color.TRANSPARENT,
+            Shader.TileMode.CLAMP
+        )
+    }
+
+    private fun setPlanetSkin(paint: Paint, @DrawableRes skinId: Int) {
+        val map = BitmapFactory.decodeResource(resources, skinId)
+        val mapWidthFloat = map.width.toFloat()
+        val mapHeightFloat = map.height.toFloat()
+        val matrix = Matrix()
+        matrix.setPolyToPoly(
+            floatArrayOf(
+                0f, 0f,
+                mapWidthFloat, 0f,
+                mapWidthFloat, mapHeightFloat,
+                0f, mapHeightFloat
+            ), 0,
+            floatArrayOf(
+                0f, mapHeightFloat * 0f,
+                mapWidthFloat * 0.2f, 0f,
+                mapWidthFloat * 0.2f, mapHeightFloat * 0.2f,
+                0f, mapHeightFloat * 0.2f
+            ), 0,
+            4)
+        val matrixBitmap = Bitmap.createBitmap(map, 0, 0, map.width, map.height, matrix, true)
+        planetBitmap = matrixBitmap
+        val bitMapShader = BitmapShader(map, Shader.TileMode.REPEAT, Shader.TileMode.MIRROR)
+        paint.shader = bitMapShader
+        skinHeight = map.height
+        skinWidth = map.width
+    }
+
+    private fun setAtmosphereGradient(
+        w: Int,
+        h: Int,
+        multiplier: Float,
+        colors: IntArray
+    ): LinearGradient {
         return LinearGradient(
             w.toFloat(),
-            0f,
+            h.toFloat() * 0.35f,
             w.toFloat() * 0.5f + (0.5f * multiplier),
-            h.toFloat() - (1 * multiplier),
-            atmosphereColors,
+            h.toFloat() * 0.5f - (1 * multiplier),
+            colors,
             null,
             Shader.TileMode.CLAMP
         )
@@ -157,12 +218,32 @@ class CosmoPlanetView : View {
         val path = Path()
         path.addCircle(middle, middle, planetRadius - 50, Path.Direction.CW)
         if (atmosphereRotation > 0f) planetAtmospherePaint.shader =
-            setAtmosphereGradient(width, height, atmosphereRotation)
-        Log.d("CANVAS", " ${atmosphereRotation}")
-        canvas.drawPath(path, planetCirclePaint)
-        canvas.drawPath(path, planetAtmospherePaint)
+            setAtmosphereGradient(width, height, atmosphereRotation, atmosphereColors)
+        canvas.drawPath(path, planetSkinPaint)
+        canvas.drawPath(path, planetAmbiancePaint)
+        canvas.drawCircle(middle, middle, planetRadius - 60, planetAtmospherePaint)
+        canvas.drawCircle(middle, middle, planetRadius - 50, sunReflectionPaint)
         if (isShadowShown) {
             canvas.drawPath(path, shadowPaint)
+        }
+    }
+
+    fun setSpin(spinX: Float, spinY: Float) {
+//        val matrix = Matrix()
+//        matrix.
+        planetSkinPaint.shader.transform {
+            this.setScale(0.4f, 0.4f)
+            postTranslate(spinX * skinWidth, 0f)
+
+        }
+    }
+
+    fun setComposeSpin(spinX: Float, spinY: Float) {
+//        val matrix = Matrix()
+//        matrix.
+        planetCirclePaint.shader.transform {
+            this.setScale(0.6f, 0.6f)
+            postTranslate(spinX * skinWidth, 0f)
         }
     }
 }

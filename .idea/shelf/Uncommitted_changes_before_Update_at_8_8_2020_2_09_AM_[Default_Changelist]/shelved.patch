@@ -1,0 +1,18 @@
+Index: app/src/main/java/com/is0git/newsapp/paging/ViewAllPagingSource.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.is0git.newsapp.paging\r\n\r\nimport android.accounts.NetworkErrorException\r\nimport android.content.Context\r\nimport androidx.paging.PagingSource\r\nimport com.is0git.newsapp.models.common.ArticlesItem\r\nimport com.is0git.newsapp.network.services.NewsHeadlinesService\r\nimport dagger.hilt.android.qualifiers.ApplicationContext\r\nimport java.io.IOException\r\nimport javax.inject.Inject\r\n\r\nclass ViewAllPagingSource @Inject constructor(\r\n    @ApplicationContext val context: Context,\r\n    private val service: NewsHeadlinesService,\r\n    val category: String,\r\n    val country: String\r\n) : PagingSource<Int, ArticlesItem>() {\r\n\r\n    private val pageStart = 1\r\n\r\n    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticlesItem> {\r\n        try {\r\n            val pageNumber = params.key ?: pageStart\r\n            val response = service.getTopHeadLines(pageNumber, params.loadSize, category, country)\r\n            if (response.body() == null) {\r\n                return LoadResult.Error(Throwable(\"network error: ${response.message()}\"))\r\n            }\r\n            return LoadResult.Page(response.body()!!.articles!!, null, pageNumber + 1)\r\n        } catch (ex: IOException) {\r\n            return LoadResult.Error(Throwable(\"no internet? Pagination is not cached ;) $ex\"))\r\n        }\r\n        catch (ex: NetworkErrorException) {\r\n            return LoadResult.Error(Throwable(\"network error $ex\"))\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/is0git/newsapp/paging/ViewAllPagingSource.kt	(revision b0db5103871dec0aa305284ebf05ba84d7b3eba9)
++++ app/src/main/java/com/is0git/newsapp/paging/ViewAllPagingSource.kt	(date 1596841266210)
+@@ -23,7 +23,7 @@
+             val pageNumber = params.key ?: pageStart
+             val response = service.getTopHeadLines(pageNumber, params.loadSize, category, country)
+             if (response.body() == null) {
+-                return LoadResult.Error(Throwable("network error: ${response.message()}"))
++                return LoadResult.Error(Throwable("reached the end: ${response.message()}"))
+             }
+             return LoadResult.Page(response.body()!!.articles!!, null, pageNumber + 1)
+         } catch (ex: IOException) {

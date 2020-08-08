@@ -8,4 +8,8 @@
         android:id="@id/navigation_about"
         android:icon="@drawable/ic_info"
         android:title="@string/info" />
+    <item
+        android:id="@id/testFragment"
+        android:icon="@drawable/ic_link"
+        android:title="@string/filter" />
 </menu>

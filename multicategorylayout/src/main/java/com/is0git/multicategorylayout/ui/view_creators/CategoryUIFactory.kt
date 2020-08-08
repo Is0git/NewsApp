@@ -32,7 +32,7 @@ object CategoryUIFactory {
             text = title
             setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
-                resources.getDimension(R.dimen.material_text_headline4)
+                resources.getDimension(R.dimen.material_text_headline5)
             )
             setSingleLine()
             ellipsize = TextUtils.TruncateAt.END
