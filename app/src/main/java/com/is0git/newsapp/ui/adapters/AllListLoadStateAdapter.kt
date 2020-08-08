@@ -33,7 +33,6 @@ class LoadStateViewHolder(
             binding.errorMsg.text = loadState.error.localizedMessage
         }
         binding.loadProgressBar.isVisible = loadState is LoadState.Loading
-        binding.retryButton.isVisible = loadState !is LoadState.Loading
         binding.errorMsg.isVisible = loadState !is LoadState.Loading
     }
 

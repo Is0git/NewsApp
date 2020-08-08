@@ -65,7 +65,10 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     app:atmosphereWidth="7dp"
+                    app:atmosphereColor="@color/default_atmosphere_color"
+                    app:ambianceColor="@color/default_ambiance_color"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:planetSkin="@drawable/earth"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:planetRadius="150dp" />

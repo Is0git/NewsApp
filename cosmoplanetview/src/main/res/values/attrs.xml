@@ -6,5 +6,9 @@
         <attr name="atmosphereWidth" format="dimension" />
         <attr name="planetAmbianceRatio" format="float" />
         <attr name="showShadow" format="boolean" />
+        <attr name="sunReflectionWidth" format="dimension"/>
+        <attr name="sunReflectionColor" format="color"/>
+        <attr name="ambianceColor" format="color"/>
+        <attr name="planetSkin" format="integer"/>
     </declare-styleable>
 </resources>
