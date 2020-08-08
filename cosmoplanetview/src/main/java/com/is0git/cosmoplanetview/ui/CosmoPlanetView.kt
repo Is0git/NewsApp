@@ -13,10 +13,12 @@ import androidx.annotation.IdRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.transform
 import com.is0git.cosmoplanetview.R
+import com.is0git.cosmoplanetview.ui.animation_manager.AnimationManager
 
 const val COSMO_PLANET_VIEW_TAG = "CosmoPlanetViewTag"
 
 class CosmoPlanetView : View {
+    private lateinit var animationManager: AnimationManager
     private lateinit var planetCirclePaint: Paint
     private lateinit var planetAtmospherePaint: Paint
     private lateinit var planetAmbiancePaint: Paint
@@ -25,6 +27,7 @@ class CosmoPlanetView : View {
     private lateinit var planetBitmap: Bitmap
     private lateinit var shadowPaint: Paint
     private var atmosphereColorId = R.color.defaultAtmosphereColor
+
     @ColorRes
     private var atmosphereColor: Int = 0
     private var ambianceColor: Int = R.color.default_ambiance_color
@@ -98,7 +101,8 @@ class CosmoPlanetView : View {
                     )
                     sunReflectionWidth =
                         getDimension(R.styleable.CosmoPlanetView_sunReflectionWidth, 8f)
-                    planetSkinDrawableId = this.getResourceId(R.styleable.CosmoPlanetView_planetSkin, R.drawable.earth)
+                    planetSkinDrawableId =
+                        this.getResourceId(R.styleable.CosmoPlanetView_planetSkin, R.drawable.earth)
                 }
 
             } catch (ex: Exception) {
@@ -242,13 +246,12 @@ class CosmoPlanetView : View {
         }
     }
 
-    fun setSpin(spinX: Float, spinY: Float) {
+    fun setSpin(spinX: Float = currentSpinX, spinY: Float = currentSpinY) {
         currentSpinX = spinX
         currentSpinY = spinY
         planetSkinPaint.shader.transform {
             this.setScale(planetScaleX, planetScaleY)
             postTranslate(spinX, spinY)
-
         }
     }
 
@@ -273,6 +276,25 @@ class CosmoPlanetView : View {
     fun setSkin(@IdRes skinId: Int) {
         planetSkinDrawableId = skinId
         setPlanetSkin(planetSkinPaint, skinId)
-        setSpin(-0.6f, 0.8f)
+        setSpin(currentSpinX, currentSpinX)
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        post {
+            animationManager = AnimationManager(this)
+        }
+    }
+
+    fun playSpinAnimation() {
+        animationManager.playCosmoAnimation(animationManager.spinAnimator)
+    }
+
+    fun pauseSpinAnimation() {
+        animationManager.pauseCosmoSpinAnimation(animationManager.spinAnimator)
+    }
+
+    fun cancelSpinAnimation() {
+        animationManager.cancelCosmoAnimation(animationManager.spinAnimator)
     }
 }

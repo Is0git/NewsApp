@@ -32,6 +32,14 @@
             app:exitAnim="@anim/main_exit_anim"
             app:popEnterAnim="@anim/main_pop_enter_anim"
             app:popExitAnim="@anim/mian_pop_exit_anim" />
+        <action
+            android:id="@+id/fromTopToTest"
+            app:destination="@id/testFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/navigation_home" />
     </fragment>
     <fragment
         android:id="@+id/categoryViewAllFragment"

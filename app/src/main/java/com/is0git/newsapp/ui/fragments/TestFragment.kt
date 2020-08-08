@@ -41,39 +41,10 @@ class TestFragment : Fragment(),
     }
 
     private fun setSeekBars() {
-        binding.planetXAxisSeek.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(
-                seekBar: SeekBar?,
-                progress: Int,
-                fromUser: Boolean
-            ) {
-                val mProgress = progress / 100f
-                binding.cosmoView.setSpin(mProgress, binding.cosmoView.currentSpinY)
-                binding.cosmoView.invalidate()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-
-        })
-        binding.planetYAxisSeek.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val mProgress = progress / 100f
-                binding.cosmoView.setSpin(binding.cosmoView.currentSpinX, mProgress)
-                binding.cosmoView.invalidate()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-
-        })
         binding.planetRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val mProgress = progress / 100f
-                val totalRadius = resources.configuration.screenWidthDp
+                val totalRadius = resources.displayMetrics.widthPixels / 3f
                 binding.cosmoView.planetRadius = totalRadius * mProgress
                 binding.cosmoView.requestLayout()
             }

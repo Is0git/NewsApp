@@ -74,6 +74,13 @@ class HeadlinesFragment :
         setActions()
     }
 
+    override fun onStart() {
+        super.onStart()
+        binding.cosmoView.post {
+            binding.cosmoView.playSpinAnimation()
+        }
+    }
+
     override fun observeData() {
         topHeadLinesViewModel.categoriesLiveData.forEach {
             it.observe(viewLifecycleOwner) { articles ->
@@ -220,6 +227,10 @@ class HeadlinesFragment :
                 if (country != null) initNewCategoriesData(country)
             }
             .launchIn(lifecycleScope)
+        binding.cosmoView.setOnLongClickListener {
+            findNavController().navigate(R.id.fromTopToTest)
+            true
+        }
     }
 
     private fun playRefreshAnimation(view: View) {

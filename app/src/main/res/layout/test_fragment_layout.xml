@@ -2,55 +2,19 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/xAxisText"
-                    style="@style/TextAppearance.MaterialComponents.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="X axis"
-                    android:textStyle="bold" />
-
-                <SeekBar
-                    android:id="@+id/planetXAxisSeek"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/yAxisText"
-                    style="@style/TextAppearance.MaterialComponents.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="Y axis"
-                    android:textStyle="bold" />
-
-                <SeekBar
-                    android:id="@+id/planetYAxisSeek"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/planetRadiusText"
@@ -132,47 +96,49 @@
                         android:text="Ambiance" />
                 </GridLayout>
             </LinearLayout>
-        </ScrollView>
 
-        <com.is0git.cosmoplanetview.ui.CosmoPlanetView
-            android:id="@+id/cosmoView"
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            android:layout_gravity="bottom|center"
-            android:layout_marginStart="100dp"
-            android:layout_marginEnd="100dp"
-            app:ambianceColor="@color/default_ambiance_color"
-            app:atmosphereColor="@color/default_atmosphere_color"
-            app:atmosphereWidth="4dp"
-            app:planetRadius="130dp"
-            app:planetSkin="@drawable/mars" />
+            <com.is0git.cosmoplanetview.ui.CosmoPlanetView
+                android:id="@+id/cosmoView"
+                android:layout_width="400dp"
+                android:layout_height="400dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginStart="100dp"
+                android:layout_marginEnd="100dp"
+                app:ambianceColor="@color/default_ambiance_color"
+                app:atmosphereColor="@color/default_atmosphere_color"
+                app:atmosphereWidth="4dp"
+                app:planetRadius="130dp"
+                app:planetSkin="@drawable/mars" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_marginStart="16dp"
-            android:layout_height="wrap_content">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/earthImageView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:civ_border_color="@color/colorPrimary"
-                app:civ_border_width="1dp"
-                android:src="@drawable/earth"/>
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/marsImageView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:civ_border_color="@color/colorPrimary"
-                app:civ_border_width="1dp"
-                android:src="@drawable/mars"/>
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/earthTwoImageView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:civ_border_color="@color/colorPrimary"
-                app:civ_border_width="1dp"
-                android:src="@drawable/test2"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/earthImageView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/earth"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_width="1dp" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/marsImageView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/mars"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_width="1dp" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/earthTwoImageView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/test2"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_width="1dp" />
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
+    </ScrollView>
 </layout>
