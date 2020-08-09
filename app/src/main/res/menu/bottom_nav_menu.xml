@@ -9,7 +9,7 @@
         android:icon="@drawable/ic_info"
         android:title="@string/info" />
     <item
-        android:id="@id/testFragment"
+        android:id="@id/customizationFragment"
         android:icon="@drawable/ic_link"
         android:title="@string/filter" />
 </menu>

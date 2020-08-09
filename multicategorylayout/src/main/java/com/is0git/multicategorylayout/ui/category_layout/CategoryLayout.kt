@@ -149,6 +149,7 @@ class CategoryLayout : ConstraintLayout,
         categoryManager.clear()
     }
 
+
     /**
      * if [listAdapter] is null, 'all item' tab won't be included]
      * [CategoryView] must be wrapped in [NestedScrollView] to use it with [TabLayout]

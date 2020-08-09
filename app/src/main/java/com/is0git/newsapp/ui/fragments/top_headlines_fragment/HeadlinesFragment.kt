@@ -1,5 +1,9 @@
 package com.is0git.newsapp.ui.fragments.top_headlines_fragment
 
+import android.animation.AnimatorSet
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,8 +13,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
@@ -18,8 +24,11 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.github.ybq.android.spinkit.animation.interpolator.Ease
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import com.is0git.commonlibs.ScreenUnitUtils
 import com.is0git.multicategorylayout.adapters.CategoryListAdapter
 import com.is0git.multicategorylayout.category_data.Category
 import com.is0git.multicategorylayout.category_data.Category.Companion.FLAG_GRID
@@ -32,6 +41,7 @@ import com.is0git.newsapp.R
 import com.is0git.newsapp.databinding.HeadlinesFragmentLayoutBinding
 import com.is0git.newsapp.di.modules.SharedPreferencesModule.DARK_MODE_KEY
 import com.is0git.newsapp.models.common.ArticlesItem
+import com.is0git.newsapp.ui.activities.MainActivity
 import com.is0git.newsapp.ui.fragments.BaseFragment
 import com.is0git.newsapp.ui.views.filter_card.Filter
 import com.is0git.newsapp.ui.views.filter_card.FilterMaterialCard
@@ -39,6 +49,8 @@ import com.is0git.newsapp.ui.views.filter_card.listeners.OnFilterCheckedListener
 import com.is0git.newsapp.utils.*
 import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel
 import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel.Companion.COUNTRY_CHIP_POSITION
+import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel.Companion.HAS_ENTER_ANIMATED_PLAYED
+import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel.Companion.PLANET_SPIN_X
 import com.is0git.newsapp.vm.top_headlines.TopHeadLinesViewModel.Companion.TAB_POSITION
 import com.is0git.newsapp.vm.top_headlines.TopHeadlinesRepository.Companion.DEFAULT_PAGE_SIZE
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,12 +60,14 @@ import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
+import kotlin.math.absoluteValue
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class HeadlinesFragment :
     BaseFragment<HeadlinesFragmentLayoutBinding>(R.layout.headlines_fragment_layout),
-    OnFilterCheckedListener {
+    OnFilterCheckedListener,
+    AppBarLayout.OnOffsetChangedListener {
 
     private val topHeadLinesViewModel: TopHeadLinesViewModel by this.navGraphViewModels(R.id.main_nav) { defaultViewModelProviderFactory }
     lateinit var allListAdapter: CategoryListAdapter<ArticlesItem, VerticalListViewHolder>
@@ -66,19 +80,21 @@ class HeadlinesFragment :
     lateinit var sharedPreferencesEditor: SharedPreferences.Editor
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        restoreFilter()
+        setActions()
         setupBottomSheet()
+        restoreFilter()
         super.onViewCreated(view, savedInstanceState)
         buildCategoryLayout()
         addHeadlinesFilters()
-        setActions()
+        hideBottomNav()
+        restorePlanetViewState()
+        playIntroAnimation()
+        setupAppBar()
     }
 
-    override fun onStart() {
-        super.onStart()
-        binding.cosmoView.post {
-            binding.cosmoView.playSpinAnimation()
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        topHeadLinesViewModel.savedStateHandle[PLANET_SPIN_X] = binding.cosmoView.currentSpinX
     }
 
     override fun observeData() {
@@ -97,7 +113,12 @@ class HeadlinesFragment :
         topHeadLinesViewModel.jobStatesLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is JobState.JobStarted -> {
-                    showProgress()
+                    val hasAnimationPlayed = topHeadLinesViewModel.savedStateHandle.get<Boolean>(
+                        HAS_ENTER_ANIMATED_PLAYED
+                    )
+                    if (hasAnimationPlayed != null && hasAnimationPlayed) {
+                        showProgress()
+                    }
                 }
                 is JobState.JobFailed -> Log.d(HEADLINE_FRAGMENT_TAG, "job failed: ${it.throwable}")
                 is JobState.JobCompleted -> {
@@ -125,6 +146,11 @@ class HeadlinesFragment :
         binding.filtersButton.setOnClickListener {
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
+
+
+    private fun setupAppBar() {
+        binding.appBar.addOnOffsetChangedListener(this)
     }
 
     private fun addHeadlinesFilters() {
@@ -380,6 +406,156 @@ class HeadlinesFragment :
         )
     }
 
+    // Animations
+    @SuppressLint("ClickableViewAccessibility")
+    private fun playIntroAnimation() {
+        val state = topHeadLinesViewModel.savedStateHandle.get<Boolean>(HAS_ENTER_ANIMATED_PLAYED)
+        if (state != null && state) {
+            resetViewValues()
+            return
+        }
+        handleTouchEventListeners(false)
+        val titleAnimatorSet = createTitleAnimation()
+        binding.cosmoView.post {
+            binding.cosmoView.setEnterAnimationOnEndListener {
+                titleAnimatorSet.start()
+            }
+            binding.cosmoView.playEnterAnimation()
+        }
+        val contentAnimator = createContentAnimators()
+        binding.root.post {
+            contentAnimator.start()
+        }
+    }
+
+    private fun setViewsAlpha(alpha: Float) {
+        binding.apply {
+            categoryLayout.alpha = alpha
+            categoryTabLayout.alpha = alpha
+            filtersButton.alpha = alpha
+            nightModeButton.alpha = alpha
+            refreshButton.alpha = alpha
+            if (isAdded) {
+                (requireActivity() as MainActivity).activityMainBinding.bottomNavigation.alpha =
+                    alpha
+            }
+        }
+    }
+
+    private fun createContentAnimators(): ValueAnimator {
+        val contentAnimator = ValueAnimator()
+        val alphaAnimatorProperty = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
+        val transYBaseValue = ScreenUnitUtils.convertDpToPixel(30f, requireContext())
+        val translationYProperty =
+            PropertyValuesHolder.ofFloat("translationY", transYBaseValue, 0f)
+        contentAnimator.apply {
+            setValues(alphaAnimatorProperty, translationYProperty)
+            addUpdateListener {
+                val alpha = it.getAnimatedValue("alpha") as Float
+                val translation = it.getAnimatedValue("translationY") as Float
+                setViewsAlpha(alpha)
+                setViewsTranslation(translation)
+            }
+            interpolator = AccelerateInterpolator()
+            duration = resources.getInteger(android.R.integer.config_longAnimTime).toLong()
+            doOnEnd {
+                handleTouchEventListeners(true)
+                topHeadLinesViewModel.savedStateHandle[HAS_ENTER_ANIMATED_PLAYED] = true
+            }
+            startDelay =
+                resources.getInteger(com.is0git.cosmoplanetview.R.integer.cosmo_enter_default_time)
+                    .toLong() - 700
+        }
+        return contentAnimator
+    }
+
+    private fun setViewsTranslation(translation: Float) {
+        binding.apply {
+            refreshButton.translationY = translation
+            categoryLayout.translationY = translation
+            categoryTabLayout.translationY = translation
+            filtersButton.translationY = translation
+            materialTextView.translationY = translation
+            nightModeButton.translationY = translation
+            refreshButton.translationY = translation
+        }
+    }
+
+    private fun createTitleAnimation(): AnimatorSet {
+        val animatorSet = AnimatorSet()
+        val textValueAnimator = ValueAnimator()
+        val planetValueAnimator = ValueAnimator()
+        val alphaPropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
+        val scalePropertyValuesHolder = PropertyValuesHolder.ofFloat("scale", 0.95f, 1f, 0.98f, 1f)
+        textValueAnimator.apply {
+            setValues(alphaPropertyValuesHolder, scalePropertyValuesHolder)
+            interpolator = Ease.inOut()
+            duration = 1000
+            addUpdateListener {
+                val alpha = it.getAnimatedValue("alpha") as Float
+                val scale = it.getAnimatedValue("scale") as Float
+                binding.materialTextView.alpha = alpha
+                binding.materialTextView.scaleX = scale
+                binding.materialTextView.scaleY = scale
+            }
+        }
+        val atmosphereRotationValue =
+            PropertyValuesHolder.ofFloat("atmosphereRotation", 0.35f, 1f, 0.35f)
+        val planetScaleAnimationValue = PropertyValuesHolder.ofFloat("scale", 1f, 1.01f, 1f)
+        planetValueAnimator.apply {
+            setValues(atmosphereRotationValue, planetScaleAnimationValue)
+            addUpdateListener {
+                val atmosphereRotation = it.getAnimatedValue("atmosphereRotation") as Float
+                val scale = it.getAnimatedValue("scale") as Float
+                binding.cosmoView.setAtmosphereRotationAnimated(atmosphereRotation)
+                binding.cosmoView.scaleX = scale
+                binding.cosmoView.scaleY = scale
+                binding.cosmoView.invalidate()
+            }
+            duration = 2000
+            interpolator = Ease.inOut()
+        }
+        return animatorSet.apply {
+            doOnEnd { resetViewValues() }
+            playTogether(textValueAnimator, planetValueAnimator)
+        }
+    }
+
+    private fun hideBottomNav() {
+        (requireActivity() as MainActivity).activityMainBinding.bottomNavigation.alpha = 0f
+    }
+
+    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+        binding.cosmoView.post {
+            val hasPlayed =
+                topHeadLinesViewModel.savedStateHandle.get<Boolean>(HAS_ENTER_ANIMATED_PLAYED)
+            if (verticalOffset.absoluteValue == 0 && hasPlayed != null && hasPlayed) binding.cosmoView.playSpinAnimation()
+            else binding.cosmoView.pauseSpinAnimation()
+        }
+    }
+
+    private fun restorePlanetViewState() {
+        val spinX = topHeadLinesViewModel.savedStateHandle.get<Float>(PLANET_SPIN_X)
+        binding.cosmoView.apply {
+            if (spinX != null) currentSpinX = spinX
+            post { updateSpin() }
+        }
+
+    }
+
+    private fun resetViewValues() {
+        binding.cosmoView.alpha = 1f
+        binding.headlinesMotionLayout.setTransition(R.id.after_intro_transition)
+        handleTouchEventListeners(true)
+        setViewsAlpha(1f)
+    }
+
+    private fun handleTouchEventListeners(enabled: Boolean) {
+        binding.categoryScrollView.isClickable = enabled
+        binding.categoryScrollView.isNestedScrollingEnabled = enabled
+        binding.categoryLayout.getAllList()?.isNestedScrollingEnabled = !enabled
+    }
+
     companion object {
         const val CATEGORY_BUSINESS = "Business"
         const val CATEGORY_ENTERTAINMENT = "Entertainment"
@@ -407,6 +583,7 @@ class HeadlinesFragment :
             else Toast.makeText(this, this.getString(R.string.no_browser), Toast.LENGTH_SHORT)
                 .show()
         }
+
         const val HEADLINE_FRAGMENT_TAG = "HeadlineFragmentTag"
     }
 }

@@ -14,6 +14,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.transform
 import com.is0git.cosmoplanetview.R
 import com.is0git.cosmoplanetview.ui.animation_manager.AnimationManager
+import com.is0git.cosmoplanetview.ui.animation_manager.animations.EnterCosmoAnimation
+import com.is0git.cosmoplanetview.ui.animation_manager.animations.SpinCosmoAnimation
 
 const val COSMO_PLANET_VIEW_TAG = "CosmoPlanetViewTag"
 
@@ -49,7 +51,7 @@ class CosmoPlanetView : View {
         this[1] = Color.parseColor("#4480bf")
         this[2] = Color.TRANSPARENT
     }
-    private var atmosphereRotation = 0f
+    private var atmosphereRotation = 0.35f
         set(value) {
             field = value
             invalidate()
@@ -150,14 +152,24 @@ class CosmoPlanetView : View {
         // atmosphere shader
         // planet shader
         planetAtmospherePaint.shader =
-            getAtmosphereGradient(w, h, atmosphereRotation, atmosphereColors)
+            createAtmosphereGradient(w, h, atmosphereRotation, atmosphereColors)
         setPlanetSkin(planetSkinPaint, planetSkinDrawableId)
         setAmbianceShader(ambianceColor, planetAmbiancePaint, w.toFloat(), h.toFloat())
         sunReflectionPaint.shader =
-            getAtmosphereGradient(w, h, atmosphereRotation, sunReflectionColors)
+            createAtmosphereGradient(w, h, atmosphereRotation, sunReflectionColors)
         setSpin(-0.6f, 0.8f)
         // shadow
-        shadowPaint.shader = LinearGradient(
+        shadowPaint.shader = createShadowShader()
+    }
+
+    override fun onDraw(canvas: Canvas?) {
+        if (canvas != null) {
+            drawPlanet(canvas)
+        }
+    }
+
+    private fun createShadowShader(): Shader {
+        return LinearGradient(
             width * 0.3f,
             height.toFloat() * 0.6f,
             width.toFloat() * 0.8f,
@@ -166,12 +178,6 @@ class CosmoPlanetView : View {
             Color.TRANSPARENT,
             Shader.TileMode.CLAMP
         )
-    }
-
-    override fun onDraw(canvas: Canvas?) {
-        if (canvas != null) {
-            drawPlanet(canvas)
-        }
     }
 
     private fun setAmbianceShader(@ColorInt color: Int, paint: Paint, w: Float, h: Float) {
@@ -214,7 +220,7 @@ class CosmoPlanetView : View {
         skinWidth = map.width
     }
 
-    private fun getAtmosphereGradient(
+    private fun createAtmosphereGradient(
         w: Int,
         h: Int,
         multiplier: Float,
@@ -222,9 +228,9 @@ class CosmoPlanetView : View {
     ): LinearGradient {
         return LinearGradient(
             w.toFloat(),
-            h.toFloat() * 0.35f,
-            w.toFloat() * 0.5f + (0.5f * multiplier),
-            h.toFloat() * 0.5f - (1 * multiplier),
+            h.toFloat() * multiplier,
+            w.toFloat() * 0.5f,
+            h.toFloat() * 0.5f,
             colors,
             null,
             Shader.TileMode.CLAMP
@@ -235,8 +241,6 @@ class CosmoPlanetView : View {
         val middle = width.toFloat() / 2f
         val path = Path()
         path.addCircle(middle, middle, planetRadius - 50, Path.Direction.CW)
-        if (atmosphereRotation > 0f) planetAtmospherePaint.shader =
-            getAtmosphereGradient(width, height, atmosphereRotation, atmosphereColors)
         canvas.drawPath(path, planetSkinPaint)
         canvas.drawPath(path, planetAmbiancePaint)
         canvas.drawCircle(middle, middle, planetRadius - 60, planetAtmospherePaint)
@@ -259,13 +263,19 @@ class CosmoPlanetView : View {
         atmosphereColors[0] = color
         atmosphereColors[1] = color
         planetAtmospherePaint.shader =
-            getAtmosphereGradient(width, height, atmosphereRotation, atmosphereColors)
+            createAtmosphereGradient(width, height, atmosphereRotation, atmosphereColors)
+    }
+
+    fun setAtmosphereRotationAnimated(atmosphereRotation: Float) {
+        this.atmosphereRotation = atmosphereRotation
+        planetAtmospherePaint.shader =
+            createAtmosphereGradient(width, height, atmosphereRotation, atmosphereColors)
     }
 
     fun setSunReflection(color: Int) {
         sunReflectionColors[0] = color
         sunReflectionPaint.shader =
-            getAtmosphereGradient(width, height, atmosphereRotation, sunReflectionColors)
+            createAtmosphereGradient(width, height, atmosphereRotation, sunReflectionColors)
     }
 
     fun setAmbianceColor(@ColorInt color: Int) {
@@ -287,14 +297,31 @@ class CosmoPlanetView : View {
     }
 
     fun playSpinAnimation() {
+        updateSpin()
         animationManager.playCosmoAnimation(animationManager.spinAnimator)
+    }
+
+    fun updateSpin() {
+        (animationManager.spinAnimator as SpinCosmoAnimation).updateSpin(currentSpinX)
     }
 
     fun pauseSpinAnimation() {
         animationManager.pauseCosmoSpinAnimation(animationManager.spinAnimator)
     }
 
+    fun resumeSpinAnimation() {
+        animationManager.resumeCosmoAnimation(animationManager.spinAnimator)
+    }
+
     fun cancelSpinAnimation() {
         animationManager.cancelCosmoAnimation(animationManager.spinAnimator)
+    }
+
+    fun playEnterAnimation() {
+        animationManager.playCosmoAnimation(animationManager.enterAnimator)
+    }
+
+    fun setEnterAnimationOnEndListener(onEnd: (() -> Unit)?) {
+        post { (animationManager.enterAnimator as EnterCosmoAnimation).onEnd = onEnd }
     }
 }

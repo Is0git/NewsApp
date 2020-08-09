@@ -8,6 +8,8 @@ import com.google.android.material.button.MaterialButton
 import com.is0git.cosmoplanetview.ui.CosmoPlanetView
 import com.is0git.newsapp.R
 
+const val HEADLINE_MOTION_LAYOUT_TAG = "headMotionTag"
+
 class HeadlinesMotionLayout : MotionLayout, AppBarLayout.OnOffsetChangedListener {
 
     var appBarLayout: AppBarLayout? = null
@@ -42,6 +44,10 @@ class HeadlinesMotionLayout : MotionLayout, AppBarLayout.OnOffsetChangedListener
             progress = position
             filterButton.translationY = 10 * position
             if (position > 0.60f) filterButton.alpha = 1 * ((1f - position) / 0.40f)
+            val newRotationValue = 0.35f + (0.75f * position)
+//            Log.d(HEADLINE_MOTION_LAYOUT_TAG, "scrollradius: $newRotationValue")
+//            cosmoView.setAtmosphereRotationAnimated(newRotationValue.coerceAtMost(1f))
+//            cosmoView.invalidate()
         }
     }
 }

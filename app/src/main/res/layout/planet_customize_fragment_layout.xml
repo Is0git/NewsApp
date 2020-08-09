@@ -17,24 +17,6 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/planetRadiusText"
-                    style="@style/TextAppearance.MaterialComponents.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="Radius"
-                    android:textStyle="bold" />
-
-                <SeekBar
-                    android:id="@+id/planetRadius"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/atmosphereText"
                     style="@style/TextAppearance.MaterialComponents.Body1"
                     android:layout_width="match_parent"
@@ -66,7 +48,8 @@
                     android:id="@+id/isShadowShownSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="8dp"
+                    android:checked="true" />
 
                 <GridLayout
                     android:layout_width="wrap_content"

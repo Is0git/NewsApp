@@ -62,24 +62,27 @@ class TopHeadlinesRepository @Inject constructor(
                     send(c)
                 }
             }
-            for (c in receiveChannel) {
+            repeat(categories.count()) {
                 launch(Dispatchers.IO) {
-                    val networkResult = executeNetworkRequest(applicationContext) {
-                        newsHeadlinesService.getTopHeadLines(
-                            0,
-                            pageSize,
-                            c,
-                            country
-                        )
-                    }
-                    if (networkResult != null) {
-                        (dataCache as HeadlineCache).deleteHeadlinesByCategory(c, country)
-                        networkResult.articles?.forEach {
-                            updateArticleForRoom(it, c, country)
+                    for (c in receiveChannel) {
+
+                        val networkResult = executeNetworkRequest(applicationContext) {
+                            newsHeadlinesService.getTopHeadLines(
+                                0,
+                                pageSize,
+                                c,
+                                country
+                            )
                         }
-                        cacheData(networkResult.articles)
-                    } else {
-                        onJobFailed(Throwable("job failed"))
+                        if (networkResult != null) {
+                            (dataCache as HeadlineCache).deleteHeadlinesByCategory(c, country)
+                            networkResult.articles?.forEach {
+                                updateArticleForRoom(it, c, country)
+                            }
+                            cacheData(networkResult.articles)
+                        } else {
+                            onJobFailed(Throwable("job failed"))
+                        }
                     }
                 }
             }

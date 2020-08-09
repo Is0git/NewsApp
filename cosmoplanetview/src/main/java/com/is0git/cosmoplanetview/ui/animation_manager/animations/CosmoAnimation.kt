@@ -4,5 +4,6 @@ interface CosmoAnimation {
     fun play()
     fun stop()
     fun pause()
+    fun resume()
     fun initAnimator()
 }

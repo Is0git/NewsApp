@@ -17,7 +17,8 @@
             <com.is0git.multicategorylayout.ui.category_layout.CategoryLayout
                 android:id="@+id/categoryLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:alpha="0" />
         </com.is0git.multicategorylayout.scroll_listener.CategoryScrollView>
 
         <com.google.android.material.appbar.AppBarLayout
@@ -28,7 +29,7 @@
             app:elevation="1dp">
 
             <com.is0git.newsapp.ui.views.HeadlinesMotionLayout
-                android:id="@+id/constraintLayout2"
+                android:id="@+id/headlinesMotionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layoutDescription="@xml/headlines_fragment_layout_xml_constraintlayout2_scene"
@@ -39,9 +40,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:alpha="0"
                     android:elevation="1dp"
                     android:fontFamily="@font/ostrich"
                     android:letterSpacing="0.3"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
                     android:shadowColor="@color/colorBackground"
                     android:shadowDx="5"
                     android:shadowDy="5"
@@ -56,7 +60,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.68" />
 
-
                 <com.is0git.cosmoplanetview.ui.CosmoPlanetView
                     android:id="@+id/cosmoView"
                     android:layout_width="400dp"
@@ -64,14 +67,15 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    app:atmosphereWidth="7dp"
-                    app:atmosphereColor="@color/default_atmosphere_color"
+                    android:alpha="0"
                     app:ambianceColor="@color/default_ambiance_color"
+                    app:atmosphereColor="@color/default_atmosphere_color"
+                    app:atmosphereWidth="7dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:planetSkin="@drawable/earth"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:planetRadius="150dp" />
+                    app:planetRadius="150dp"
+                    app:planetSkin="@drawable/earth" />
 
                 <ImageButton
                     android:id="@+id/nightModeButton"
@@ -80,6 +84,7 @@
                     android:layout_marginTop="18dp"
                     android:layout_marginEnd="18dp"
                     android:layout_marginRight="18dp"
+                    android:alpha="0"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_night"
                     android:tint="@color/colorPrimary"
@@ -93,6 +98,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="16dp"
+                    android:alpha="0"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_refresh"
                     app:layout_constraintStart_toStartOf="parent"
@@ -106,6 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:alpha="0"
                 android:text="@string/filter"
                 android:textAlignment="center"
                 app:icon="@drawable/ic_adjust"
@@ -120,6 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
+                android:alpha="0"
                 app:tabTextAppearance="@style/CategoryLayout.TabLayout.TextAppearance" />
         </com.google.android.material.appbar.AppBarLayout>
 

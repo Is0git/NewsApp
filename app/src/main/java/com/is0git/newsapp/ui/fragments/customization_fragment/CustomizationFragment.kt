@@ -1,4 +1,4 @@
-package com.is0git.newsapp.ui.fragments
+package com.is0git.newsapp.ui.fragments.customization_fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,15 +9,14 @@ import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
 import com.is0git.newsapp.R
-import com.is0git.newsapp.databinding.TestFragmentLayoutBinding
+import com.is0git.newsapp.databinding.PlanetCustomizeFragmentLayoutBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.test_fragment_layout.*
 
 
 @AndroidEntryPoint
-class TestFragment : Fragment(),
+class CustomizationFragment : Fragment(),
     View.OnTouchListener {
-    lateinit var binding: TestFragmentLayoutBinding
+    lateinit var binding: PlanetCustomizeFragmentLayoutBinding
     lateinit var planetGestureDetector: ScaleGestureDetector
     var lastX = 0f
     var lastY = 0f
@@ -27,7 +26,7 @@ class TestFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = TestFragmentLayoutBinding.inflate(inflater, container, false)
+        binding = PlanetCustomizeFragmentLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -41,18 +40,15 @@ class TestFragment : Fragment(),
     }
 
     private fun setSeekBars() {
-        binding.planetRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.planetAtmosphere.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val mProgress = progress / 100f
-                val totalRadius = resources.displayMetrics.widthPixels / 3f
-                binding.cosmoView.planetRadius = totalRadius * mProgress
-                binding.cosmoView.requestLayout()
+                binding.cosmoView.setAtmosphereRotationAnimated(mProgress)
+                binding.cosmoView.invalidate()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-
         })
     }
 
@@ -66,12 +62,12 @@ class TestFragment : Fragment(),
     private fun setButtons() {
         binding.atmosphereColorButton.setOnClickListener {
             buildColorPickerDialog {
-                cosmoView.setAtmosphereColor(it)
+                binding.cosmoView.setAtmosphereColor(it)
             }
         }
         binding.sunReflectionColorButton.setOnClickListener {
             buildColorPickerDialog {
-                cosmoView.setSunReflection(it)
+                binding.cosmoView.setSunReflection(it)
                 binding.cosmoView.invalidate()
             }
         }

@@ -23,7 +23,7 @@ class ViewAllPagingSource @Inject constructor(
             val pageNumber = params.key ?: pageStart
             val response = service.getTopHeadLines(pageNumber, params.loadSize, category, country)
             if (response.body() == null) {
-                return LoadResult.Error(Throwable("reached the end: ${response.message()}"))
+                return LoadResult.Error(Throwable("List has reached the end ;( ${response.message()}"))
             }
             return LoadResult.Page(response.body()!!.articles!!, null, pageNumber + 1)
         } catch (ex: IOException) {

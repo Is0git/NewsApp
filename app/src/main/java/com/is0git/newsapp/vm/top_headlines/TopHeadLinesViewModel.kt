@@ -22,6 +22,7 @@ class TopHeadLinesViewModel @ViewModelInject constructor(
     val bottomSheetStateLiveData = savedStateHandle.getLiveData<Int>(BOTTOM_SHEET_STATE)
 
     init {
+        savedStateHandle[HAS_ENTER_ANIMATED_PLAYED] = false
         getCategories(
             *HeadlinesFragment.categories,
             pageSize = DEFAULT_PAGE_SIZE,
@@ -44,5 +45,7 @@ class TopHeadLinesViewModel @ViewModelInject constructor(
         const val TAB_POSITION = "TabPosition"
         const val COUNTRY_CHIP_POSITION = "CountryChipPosition"
         const val BOTTOM_SHEET_STATE = "BottomSheetState"
+        const val HAS_ENTER_ANIMATED_PLAYED = "EnterAnimatedPlayed"
+        const val PLANET_SPIN_X = "PlanetSpinX"
     }
 }
