@@ -5,12 +5,12 @@
 </p>
 
 <p float="left">
-   <img width="400" src="http://danielktx.com/images/newsapp/1" />
-  <img width="400" src="http://danielktx.com/images/newsapp/2" />
-    <img width="400" src="http://danielktx.com/images/newsapp/3" />
-    <img width="400" src="http://danielktx.com/images/newsapp/4" />
-  <img width="400" src="http://danielktx.com/images/newsapp/5" />
-  <img width="400" src="http://danielktx.com/images/newsapp/6" />
+   <img width="400" src="http://danielktx.com/images/newsapp/1.jpg" />
+  <img width="400" src="http://danielktx.com/images/newsapp/2.jpg" />
+    <img width="400" src="http://danielktx.com/images/newsapp/3.jpg" />
+    <img width="400" src="http://danielktx.com/images/newsapp/4.jpg" />
+  <img width="400" src="http://danielktx.com/images/newsapp/5.jpg" />
+  <img width="400" src="http://danielktx.com/images/newsapp/6.jpg" />
   </p>
 
 <h3>Description</h3>
